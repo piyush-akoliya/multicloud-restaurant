@@ -11,7 +11,7 @@ const DemoPage1 = () => {
         alignItems="center"
         style={{ minHeight: "65vh" }}
       >
-        <Typography variant="h4">Demo page with Navbar Layout</Typography>
+        <Typography variant="h5">Demo page with Navbar Layout</Typography>
         <img
           src={img1}
           alt="Your Description"

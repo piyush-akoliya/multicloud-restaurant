@@ -9,6 +9,7 @@ const Router = () => {
     <Routes location={location} key={location.pathname}>
       <Route path="/" element={<NavbarLayout />}>
         <Route path="/DemoPage1" element={<DemoPage1 />} />
+        <Route path="/" element={<DemoPage1 />} />
       </Route>
       <Route path="/DemoPage2" element={<DemoPage2 />} />
     </Routes>

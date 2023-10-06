@@ -35,9 +35,18 @@ export default function NavbarLayout(props) {
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
+      {/* <Typography variant="h6" sx={{ my: 2 }}>
         BOOKABITE
-      </Typography>
+      </Typography> */}
+      <img
+        src={logo}
+        alt=""
+        width={200}
+        onClick={() => {
+          navigate("/");
+        }}
+        style={{ cursor: "pointer" }}
+      />
       <Divider />
       <List>
         {navItems.map((item) => (
@@ -75,9 +84,9 @@ export default function NavbarLayout(props) {
               aria-label="open drawer"
               edge="start"
               onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { sm: "none" } }}
+              sx={{ mr: 2, display: { sm: "none" }, color: "#000" }}
             >
-              <MenuIcon color="#000" />
+              <MenuIcon />
             </IconButton>
             <Typography
               variant="h6"
