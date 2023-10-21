@@ -1,7 +1,20 @@
 import React, { useState } from "react";
 import { Grid, Typography } from "@mui/material";
+
 import img1 from "../../assets/vec2.jpeg";
+import Login from "../../auth/login";
+import Signup from "../../auth/signup";
 const DemoPage1 = () => {
+
+  const [isLogin, setIsLogin] = useState(true);
+
+  const containerStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    margin: '10px 0',
+  };
+
   return (
     <>
       <Grid
@@ -11,13 +24,20 @@ const DemoPage1 = () => {
         alignItems="center"
         style={{ minHeight: "65vh" }}
       >
-        <Typography variant="h5">Demo page with Navbar Layout</Typography>
-        <img
+        {/* <Typography variant="h5">Demo page with Navbar Layout</Typography> */}
+        {/* <img
           src={img1}
           alt="Your Description"
           style={{ textAlign: "center" }}
           width={400}
-        />
+        /> */}
+
+        <div style={containerStyle}>
+        {isLogin ? <Login /> : <Signup />}
+        <button onClick={() => setIsLogin(!isLogin)}>
+          {isLogin ? 'Switch to Register' : 'Switch to Login'}
+        </button>
+      </div>
       </Grid>
     </>
   );
