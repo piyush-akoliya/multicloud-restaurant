@@ -26,6 +26,7 @@ exports.getUpcomingConfirmedReservations = onRequest(async (req, res) => {
             data.reservation_id
           } \n Time : ${new Date(data.reservation_time._seconds * 1000)}`,
         user_id: data.user_id,
+        user_email: "",
       };
 
       axios
@@ -49,8 +50,6 @@ exports.getUpcomingConfirmedReservations = onRequest(async (req, res) => {
   return res.status(200).send("Emails sent successfully");
 });
 
-const { PubSub } = require("@google-cloud/pubsub");
-const pubsub = new PubSub();
 const nodemailer = require("nodemailer");
 
 exports.sendEmailNotifications = onRequest(async (req, res) => {
@@ -66,16 +65,32 @@ exports.sendEmailNotifications = onRequest(async (req, res) => {
     },
   });
 
-  //get the user email
-  const userQuerySnapshot = await db
-    .collection("users")
-    .where("user_id", "==", emailData.user_id)
-    .get();
+  if (emailData.user_email === "") {
+    //get the user email
+    const userQuerySnapshot = await db
+      .collection("users")
+      .where("user_id", "==", emailData.user_id)
+      .get();
 
-  if (!userQuerySnapshot.empty) {
-    const userDoc = userQuerySnapshot.docs[0];
-    const userData = userDoc.data();
-    const email = userData.email_id;
+    if (!userQuerySnapshot.empty) {
+      const userDoc = userQuerySnapshot.docs[0];
+      const userData = userDoc.data();
+      const email = userData.email_id;
+
+      // Compose and send the email
+      const mailOptions = {
+        from: "akoliyapiyush28@gmail.com",
+        to: email,
+        subject: emailData.subject,
+        text: emailData.body,
+      };
+
+      await transporter.sendMail(mailOptions);
+    } else {
+      console.error("User not found.");
+    }
+  } else {
+    const email = emailData.user_email;
 
     // Compose and send the email
     const mailOptions = {
@@ -86,9 +101,41 @@ exports.sendEmailNotifications = onRequest(async (req, res) => {
     };
 
     await transporter.sendMail(mailOptions);
-  } else {
-    console.error("User not found.");
   }
 
   return res.status(200).json({ message: "email sent to all" });
+});
+
+exports.getAllUsers = onRequest(async (req, res) => {
+  const emailDetails = req.body;
+  console.log(emailDetails);
+  const userQuerySnapshot = await db.collection("users").get();
+  if (!userQuerySnapshot.empty) {
+    userQuerySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const emailData = {
+        subject: emailDetails.subject,
+        body: emailDetails.body,
+        user_id: data.user_id,
+        user_email: data.email_id,
+      };
+
+      axios
+        .post(
+          "https://us-central1-serverless-402501.cloudfunctions.net/sendEmailNotifications",
+          emailData
+        )
+        .then((response) => {
+          console.log("Users found successfully.");
+        })
+        .catch((error) => {
+          console.error("Error fetching users:", error);
+          return res.status(500).send("Error fetching users");
+        });
+    });
+    return res.status(200).send("Email sent to all the users successfully!!");
+  } else {
+    console.error("No Users present yet");
+    return res.status(200).send("No users found!!");
+  }
 });
