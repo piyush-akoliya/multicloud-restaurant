@@ -1,0 +1,13 @@
+.card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+  }
+  
+  .restaurant-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
