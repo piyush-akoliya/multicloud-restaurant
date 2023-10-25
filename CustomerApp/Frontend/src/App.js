@@ -1,26 +1,21 @@
 import React from 'react';
-import Router from "./Routes";
-import { BrowserRouter } from "react-router-dom";
-import ScrollToTop from "./utils/ScrollToTop";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import ScrollToTop from './utils/ScrollToTop';
 import './components/styles.css';
 
 import RestaurantList from './RestaurantList';
+import RestaurantDetails from './RestaurantDetails';
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <ScrollToTop>
-          <Router />
-          <div className="App">
-            <h1>Restaurant List</h1>
-          <RestaurantList />
-          </div>
-          <Router />
-        </ScrollToTop>
-      </BrowserRouter>
-
-    </>
+    <Router>
+      <ScrollToTop />
+      <Routes>
+      <Route path="/" component={RestaurantList} />
+      <Route path="/restaurant/:id" component={RestaurantDetails} />
+      </Routes>
+      
+    </Router>
   );
 }
 

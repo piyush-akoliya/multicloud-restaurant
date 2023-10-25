@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import RestaurantCard from './components/RestaurantCard';
 
 const restaurants = [
@@ -79,15 +80,16 @@ const RestaurantList = () => {
   return (
     <div className="restaurant-list">
       {restaurants.map((restaurant) => (
-        <RestaurantCard
-          key={restaurant.id}
-          id={restaurant.id}
-          name={restaurant.name}
-          location={restaurant.location}
-          operationHours={restaurant.operationHours}
-          numOfTables={restaurant.numOfTables}
-          foodMenu={restaurant.foodMenu}
-        />
+        <Link key={restaurant.id} to={`/restaurant/${restaurant.id}`}> {/* Use Link to navigate to restaurant details */}
+          <RestaurantCard
+            id={restaurant.id}
+            name={restaurant.name}
+            location={restaurant.location}
+            operationHours={restaurant.operationHours}
+            numOfTables={restaurant.numOfTables}
+            foodMenu={restaurant.foodMenu}
+          />
+        </Link>
       ))}
     </div>
   );
