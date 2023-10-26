@@ -1,4 +1,3 @@
-// RestaurantList.js
 import React from 'react';
 import RestaurantCard from './RestaurantCard';
 import restaurantsData from './restaurantData';
