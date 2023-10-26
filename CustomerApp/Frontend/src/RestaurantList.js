@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import RestaurantCard from './components/RestaurantCard';
+import RestaurantCard from './list-restaurant/RestaurantCard';
+import RestaurantDetails from './list-restaurant/RestaurantDetails';
+import './components/styles.css';
 
-const restaurants = [
+const restaurantsList = [
   {
     id: 1,
     name: 'Restaurant A',
@@ -79,8 +81,8 @@ const restaurants = [
 const RestaurantList = () => {
   return (
     <div className="restaurant-list">
-      {restaurants.map((restaurant) => (
-        <Link key={restaurant.id} to={`/restaurant/${restaurant.id}`}> {/* Use Link to navigate to restaurant details */}
+      {restaurantsList.map((restaurant) => (
+        <Link key={restaurant.id} to={`/restaurant/${restaurant.id}`}>
           <RestaurantCard
             id={restaurant.id}
             name={restaurant.name}
