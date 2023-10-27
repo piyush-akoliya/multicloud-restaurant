@@ -2,8 +2,7 @@ import React from 'react'
 import { Card, CardHeader, Grid } from "@mui/material";
 
 const DetailsCard = ({data}) => {
-    console.log(data)
-    return(
+        return(
         <Card>
             <Grid container  alignItems="center" style={{padding:"10px"}}>
                 <Grid item xs={12}>
