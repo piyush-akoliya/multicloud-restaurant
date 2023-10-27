@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import DetailsCard from './DetailsCard';
-import { Grid } from '@mui/material';
+import { Grid, Typography, Box, Card, CardContent, Paper } from '@mui/material';
 
 const RestaurantDetails = () => {
   const { id } = useParams();
@@ -23,38 +23,44 @@ const RestaurantDetails = () => {
     fetchRestaurantData();
   }, [id]);
 
-  console.log(restaurant?.restaurant_food_menu)
-
   if (!restaurant) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="restaurant-details">
-      <h2>{restaurant.restaurant_name} Details</h2>
-      <p>id: {restaurant.restaurant_id}</p>
-      <p>Location: {restaurant.restaurant_location}</p>
-      <p>Operation Hours: 
-        {restaurant.restaurant_operation_details.map((time, index) => (
-          <span key={index}>
-            {time.day} - {time.opening_time} to {time.closing_time}
-            <br />
-          </span>
+    <Box sx={{ padding: 4 }}>
+      <Typography variant="h4" align="center" gutterBottom>
+        {restaurant.restaurant_name} Details
+      </Typography>
+      <Card sx={{ marginBottom: 4 }}>
+        <CardContent>
+          <Typography variant="subtitle1" gutterBottom>
+            <b>Location:</b> {restaurant.restaurant_location}
+          </Typography>
+          <Typography variant="subtitle1" gutterBottom>
+            <b>Operation Hours:</b>{' '}
+            {restaurant.restaurant_operation_details.map((time, index) => (
+              <span key={index}>
+                {time.day} - {time.opening_time} to {time.closing_time}
+                <br />
+              </span>
+            ))}
+          </Typography>
+          <Typography variant="subtitle1" gutterBottom>
+            <b>Number of Tables:</b> {restaurant.restaurant_number_of_tables}
+          </Typography>
+        </CardContent>
+      </Card>
+      <Grid container spacing={3}>
+        {restaurant?.restaurant_food_menu?.map((data, i) => (
+          <Grid item sm={4} key={i}>
+            <Paper elevation={3} sx={{ padding: 2, height: '100%' }}>
+              <DetailsCard data={data} />
+            </Paper>
+          </Grid>
         ))}
-      </p>
-      <p>Number of Tables: {restaurant.restaurant_number_of_tables}</p>
-      
-     <Grid container spacing={3} alignItems="center" justifyContent="center">
-      {restaurant?.restaurant_food_menu?.map((data,i)=>(
-        <Grid item sm={3} key={i}><DetailsCard data={data} /></Grid>
-      ))}
-     
-     </Grid>
-
-          
-        
-      
-    </div>
+      </Grid>
+    </Box>
   );
 };
 
