@@ -1,67 +1,66 @@
-/* styles.css */
-.list-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-}
+  .list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
 
-h1 {
-  font-size: 42px;
-  color: #333;
-  font-weight: 700;
-  margin-bottom: 30px;
-}
+  h1 {
+    font-size: 42px;
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 30px;
+  }
 
-.restaurants {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
+  .restaurants {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 
-.restaurant-card {
-  width: 350px;
-  margin: 20px;
-  padding: 30px;
-  border-radius: 15px;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd; /* Light gray border */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  text-decoration: none;
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  .restaurant-card {
+    width: 350px;
+    margin: 20px;
+    padding: 30px;
+    border-radius: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd; /* Light gray border */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-.restaurant-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  border: 1px solid #000; /* Black border on hover */
-}
+  .restaurant-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    border: 1px solid #000; /* Black border on hover */
+  }
 
-.view-details {
-  margin-top: 20px;
-  background-color: #4ecdc4;
-  color: #fff;
-  padding: 12px 24px;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
+  .view-details {
+    margin-top: 20px;
+    background-color: #4ecdc4;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
 
-.view-details:hover {
-  background-color: #47b8b0;
-}
+  .view-details:hover {
+    background-color: #47b8b0;
+  }
 
-h2 {
-  font-size: 28px;
-  margin-bottom: 20px;
-  text-align: center;
-}
+  h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
 
-p {
-  margin: 12px 0;
-  text-align: center;
-}
+  p {
+    margin: 12px 0;
+    text-align: center;
+  }
