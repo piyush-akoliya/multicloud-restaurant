@@ -1,4 +1,6 @@
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import React from 'react';
+import Router from "./Routes";
+import { BrowserRouter } from "react-router-dom";
 import ScrollToTop from "./utils/ScrollToTop";
 import Login from "./auth/login";
 import Signup from "./auth/signup";
