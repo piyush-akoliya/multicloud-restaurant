@@ -1,9 +1,9 @@
 const AWS = require('aws-sdk');
-const dynamoDB = new AWS.DynamoDB();
+const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
     const params = {
-        TableName: "restaurants"
+        TableName: 'restaurants'
     };
 
     try {
@@ -11,11 +11,17 @@ exports.handler = async (event) => {
         return {
             statusCode: 200,
             body: JSON.stringify(data.Items),
+            headers: {
+                'Content-Type': 'application/json',
+            },
         };
-    } catch (err) {
+    } catch (error) {
         return {
             statusCode: 500,
-            body: JSON.stringify(err),
+            body: JSON.stringify(error.message),
+            headers: {
+                'Content-Type': 'application/json',
+            },
         };
     }
 };
