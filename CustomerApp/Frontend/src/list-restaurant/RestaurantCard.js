@@ -1,9 +1,13 @@
-// RestaurantCard.js
+// Importing necessary modules from React
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+// RestaurantCard component that displays information about a restaurant
 const RestaurantCard = ({ id, name, location, operationHours, numOfTables, foodMenu, imageUrl }) => {
+  
+  // Rendering the restaurant card
   return (
+    // Linking the card to the restaurant's specific page
     <Link to={`/restaurant/${id}`} className="restaurant-card">
       {imageUrl && <img src={imageUrl} alt={name} className="restaurant-image"  style={{height:"200px", width:"100%", borderRadius:"5px"}}/>}
       <h2>{name}</h2>
@@ -24,4 +28,5 @@ const RestaurantCard = ({ id, name, location, operationHours, numOfTables, foodM
   );
 };
 
+// Exporting the RestaurantCard component
 export default RestaurantCard;

@@ -1,7 +1,10 @@
+// Importing necessary modules from React and Material-UI
 import React from 'react'
 import { Card, CardHeader, Grid } from "@mui/material";
 
+// DetailsCard component that takes in data as a prop
 const DetailsCard = ({data}) => {
+    // Rendering the card with the data passed in
         return(
         <Card>
             <Grid container  alignItems="center" style={{padding:"10px"}}>
@@ -30,4 +33,5 @@ const DetailsCard = ({data}) => {
     )
 }
 
+// Exporting the DetailsCard component
 export default DetailsCard;

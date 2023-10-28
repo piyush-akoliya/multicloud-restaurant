@@ -1,3 +1,4 @@
+// An array of objects containing data for multiple restaurants
 const restaurantsData = [
     {
       id: 1,
@@ -72,4 +73,5 @@ const restaurantsData = [
     },
   ];
   
-export default restaurantsData;
+// Exporting the restaurantsData array to be used in other files
+  export default restaurantsData;
