@@ -7,7 +7,7 @@ module.exports.sendRestaurantOffers = async (event) => {
   const dayOfWeek = getTodaysDay();
 
   const params = {
-    TableName: "Restaurant",
+    TableName: "restaurants",
     FilterExpression: "attribute_exists(offers)",
   };
   console.log("Reached here::2");

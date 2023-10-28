@@ -291,3 +291,28 @@ async function getUserEmailCaller(emailData) {
       return res.status(500).send("Error sending emails");
     });
 }
+
+exports.getAllCompletedReservationsForCustomer = onRequest(async (req, res) => {
+  console.log(req.body);
+  var userData = req.body;
+
+  const completedReservations = [];
+  console.log(userData.user_id);
+  const querySnapshot = await db
+    .collection("reservation")
+    .where("user_id", "==", userData.user_id)
+    .where("reservation_status", "==", "Completed")
+    .get();
+  if (!querySnapshot.empty) {
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      completedReservations.push(data);
+    });
+
+    console.log(completedReservations);
+
+    res.status(200).send(completedReservations);
+  } else {
+    res.status(200).send("No reservations found.");
+  }
+});
