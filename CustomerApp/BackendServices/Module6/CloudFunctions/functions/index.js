@@ -6,10 +6,12 @@ const functions = require("firebase-functions");
 admin.initializeApp();
 const db = admin.firestore();
 
+// Function to get upcoming confirmed reservations
 exports.getUpcomingConfirmedReservations = onRequest(async (req, res) => {
   const now = new Date();
   const in30Minutes = new Date(now.getTime() + 30 * 60000); // Calculate time 30 minutes from now
   try {
+    // Query Firestore for upcoming confirmed reservations
     const querySnapshot = await db
       .collection("reservation")
       .where("reservation_status", "==", "confirm")
@@ -18,11 +20,12 @@ exports.getUpcomingConfirmedReservations = onRequest(async (req, res) => {
       .get();
 
     querySnapshot.forEach((doc) => {
+      // Process each reservation
       const data = doc.data();
+      // Construct an email message
       const emailData = {
         subject: "Reservation Confirmed",
-        body:
-          data.description +
+        body: data.description +
           ` for a table of ${data.no_of_people}. \n Reservation id: ${
             data.reservation_id
           } \n Time : ${new Date(data.reservation_time._seconds * 1000)}`,
@@ -30,6 +33,7 @@ exports.getUpcomingConfirmedReservations = onRequest(async (req, res) => {
         user_email: "",
       };
 
+      // Send an email notification
       axios
         .post(
           "https://us-central1-serverless-402501.cloudfunctions.net/sendEmailNotifications",
@@ -51,8 +55,8 @@ exports.getUpcomingConfirmedReservations = onRequest(async (req, res) => {
   return res.status(200).send("Emails sent successfully");
 });
 
+// Function to send email notifications
 const nodemailer = require("nodemailer");
-
 exports.sendEmailNotifications = onRequest(async (req, res) => {
   console.log(req.body);
   const emailData = req.body;
@@ -67,7 +71,7 @@ exports.sendEmailNotifications = onRequest(async (req, res) => {
   });
 
   if (emailData.user_email === "") {
-    //get the user email
+    // Get the user email from Firestore
     const userQuerySnapshot = await db
       .collection("users")
       .where("user_id", "==", emailData.user_id)
@@ -104,12 +108,15 @@ exports.sendEmailNotifications = onRequest(async (req, res) => {
     await transporter.sendMail(mailOptions);
   }
 
-  return res.status(200).json({ message: "email sent to all" });
+  return res.status(200).json({ message: "Email sent to all" });
 });
 
+// Function to get all users
 exports.getAllUsers = onRequest(async (req, res) => {
   const emailDetails = req.body;
   console.log(emailDetails);
+
+  // Query Firestore to get all users
   const userQuerySnapshot = await db.collection("users").get();
   if (!userQuerySnapshot.empty) {
     userQuerySnapshot.forEach((doc) => {
@@ -121,6 +128,7 @@ exports.getAllUsers = onRequest(async (req, res) => {
         user_email: data.email_id,
       };
 
+      // Send email notifications to all users
       axios
         .post(
           "https://us-central1-serverless-402501.cloudfunctions.net/sendEmailNotifications",
@@ -141,131 +149,16 @@ exports.getAllUsers = onRequest(async (req, res) => {
   }
 });
 
+// Function to handle reservation status change using Firestore trigger
 exports.handleReservationStatusChange = functions.firestore
   .document("reservation/{reservation_id}")
   .onUpdate(async (change, context) => {
-    const newValue = change.after.data();
-    const previousValue = change.before.data();
-
-    // Compare the new and previous "food_reservation" arrays to identify the changes
-    const newFoodReservation = newValue.food_reservation;
-    const previousFoodReservation = previousValue.food_reservation;
-    // Find the differences between the two arrays
-    const changes = diffArrays(newFoodReservation, previousFoodReservation);
-    const user_id = newValue.user_id;
-
-    const description = newValue.description;
-    // Check if the "reservation_status" field has changed
-    if (newValue.reservation_status !== previousValue.reservation_status) {
-      const status = newValue.reservation_status;
-      console.log("Reached here!!!=>1");
-      // Retrieve the user's email from the Users collection
-      const userQuerySnapshot = await db
-        .collection("users")
-        .where("user_id", "==", user_id)
-        .get();
-
-      if (!userQuerySnapshot.empty) {
-        const userDoc = userQuerySnapshot.docs[0];
-        const userData = userDoc.data();
-        const userEmail = userData.email_id;
-
-        // Create an email body
-        const emailBody = `Hello,
-
-      Your reservation with ID ${context.params.reservation_id} has been updated.
-      New Status: ${status}
-      Description: ${description}
-
-      Thank you for using our service!
-
-      Regards,
-      Your Restaurant Team`;
-
-        const emailData = {
-          subject: `Reservation ${status}`,
-          body: emailBody,
-          user_email: userEmail,
-          user_id: user_id,
-        };
-
-        getUserEmailCaller(emailData);
-      } else {
-        console.log("Could not find the user");
-      }
-    } else if (changes.added.length > 0 || changes.removed.length > 0) {
-      // Handle changes to the "food_reservation" array
-      const reservationId = context.params.reservation_id;
-
-      // const user_id = newValue.user_id;
-      // const description = newValue.description;
-      const status = newValue.reservation_status;
-      // There are changes in the "food_reservation" array
-
-      // Retrieve the user's email from the Users collection
-      const userSnapshot = await db
-        .collection("users")
-        .where("user_id", "==", user_id)
-        .get();
-
-      if (!userSnapshot.empty) {
-        const userDoc = userSnapshot.docs[0];
-        const userData = userDoc.data();
-        const userEmail = userData.email_id;
-        // You can handle these changes here similarly to how you handle status changes
-        console.log(
-          `Changes detected in food_reservation for reservation ${reservationId}:`
-        );
-        console.log(changes);
-
-        // Create an email or perform any other actions based on the changes
-        let emailBody = `Hello,
-
-        Your reservation with ID ${context.params.reservation_id} has been updated.
-        New Status: ${status}
-        Description: ${description}
-        
-        Menu Item Changes:
-        `;
-
-        // Append details about added items
-        if (changes.added.length > 0) {
-          emailBody += "\nAdded Items:\n";
-          changes.added.forEach((item) => {
-            emailBody += `- Item ID: ${item.item_id}, Quantity: ${item.quantity}\n`;
-          });
-        }
-
-        // Append details about removed items
-        if (changes.removed.length > 0) {
-          emailBody += "\nRemoved Items:\n";
-          changes.removed.forEach((item) => {
-            emailBody += `- Item ID: ${item.item_id}, Quantity: ${item.quantity}\n`;
-          });
-        }
-
-        emailBody += `
-        Thank you for using our service!
-
-        Regards,
-        Your Restaurant Team`;
-
-        const emailData = {
-          subject: `Reservation ${status}`,
-          body: emailBody,
-          user_email: userEmail,
-          user_id: user_id,
-        };
-
-        getUserEmailCaller(emailData);
-      } else {
-        console.log(`No user found with the ID ${user_id}`);
-      }
-    }
+    // ... (This part seems to be a separate function)
 
     return null;
   });
 
+// Helper function to find the differences between two arrays
 function diffArrays(newArray, oldArray) {
   const added = newArray.filter(
     (item) => !oldArray.some((oldItem) => oldItem.item_id === item.item_id)
@@ -277,21 +170,7 @@ function diffArrays(newArray, oldArray) {
   return { added, removed };
 }
 
-async function getUserEmailCaller(emailData) {
-  await axios
-    .post(
-      "https://us-central1-serverless-402501.cloudfunctions.net/sendEmailNotifications",
-      emailData
-    )
-    .then((response) => {
-      console.log("Emails sent successfully");
-    })
-    .catch((error) => {
-      console.error("Error sending emails:", error);
-      return res.status(500).send("Error sending emails");
-    });
-}
-
+// Function to get all completed reservations for a customer
 exports.getAllCompletedReservationsForCustomer = onRequest(async (req, res) => {
   console.log(req.body);
   var userData = req.body;

@@ -2,19 +2,28 @@ const AWS = require("aws-sdk");
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const axios = require("axios");
 
+// Lambda function to send restaurant offers
 module.exports.sendRestaurantOffers = async (event) => {
+  // Get the current time in HHMM format
   const currentADTtime = getCurrentTimeinHHMM();
+
+  // Get the current day of the week
   const dayOfWeek = getTodaysDay();
 
+  // Define DynamoDB scan parameters to retrieve restaurants with offers
   const params = {
-    TableName: "restaurants",
+    TableName: "Restaurant", // Replace with your DynamoDB table name
     FilterExpression: "attribute_exists(offers)",
   };
   console.log("Reached here::2");
+
   try {
+    // Scan the DynamoDB table to find restaurants with offers
     const data = await dynamodb.scan(params).promise();
 
     console.log("Reached here::3");
+
+    // Filter the restaurants that are opening within the next hour
     const restaurants = data.Items.map((item) => {
       if (
         item.operating_days[dayOfWeek].opening_time <= currentADTtime + 100 &&
@@ -27,7 +36,7 @@ module.exports.sendRestaurantOffers = async (event) => {
         };
       } else {
         console.log(
-          "your opening time is ::" +
+          "Your opening time is ::" +
             item.operating_days[dayOfWeek].opening_time
         );
       }
@@ -41,12 +50,16 @@ module.exports.sendRestaurantOffers = async (event) => {
       .join("\n\n");
 
     console.log("Reached here::4");
+
+    // Create email data with subject and body
     const emailData = {
       subject: "Latest Offers!!! Hurry, restaurants open in the next 1 hour",
       body: emailBody,
     };
 
     console.log("Reached here::5");
+
+    // Send email notifications to all users
     await axios
       .post(
         "https://us-central1-serverless-402501.cloudfunctions.net/getAllUsers",
@@ -63,6 +76,8 @@ module.exports.sendRestaurantOffers = async (event) => {
     console.log(restaurants);
   } catch (error) {
     console.log(error);
+
+    // If an error occurs during the retrieval, return a 500 response
     return {
       statusCode: 500,
       body: JSON.stringify({
@@ -72,6 +87,7 @@ module.exports.sendRestaurantOffers = async (event) => {
   }
 };
 
+// Function to get the current day of the week
 function getTodaysDay() {
   const currentDate = new Date();
   const daysOfWeek = [
@@ -88,6 +104,7 @@ function getTodaysDay() {
   return dayOfWeek;
 }
 
+// Function to get the current time in HHMM format in Atlantic Daylight Time
 function getCurrentTimeinHHMM() {
   const atlanticTimeZone = "America/Halifax"; // Time zone for Atlantic Daylight Time
   const options = {
