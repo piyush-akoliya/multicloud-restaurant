@@ -7,6 +7,10 @@ import Chatbot from "./views/Chatbot";
 import NavbarLayout from "./utils/NavbarLayout";
 import RestaurantDetails from "./list-restaurant/RestaurantDetails";
 import RestaurantList from "./list-restaurant/RestaurantList";
+import ViewReservation from "./views/Reservation/viewReservation";
+
+
+import Slots from "./views/Reservation/checkAvailability";
 import "./list-restaurant/styles.css";
 import Footer from "./utils/Footer";
 
@@ -23,8 +27,13 @@ const Router = () => {
         <Route path="/chatbot" element={<Chatbot />} />
         <Route path="/restaurantList" element={<RestaurantList />} />
         <Route path="/restaurant/:id" element={<RestaurantDetails />} />
+        {/* <Route path="/checkAvailability" Component={Slots} />
+      <Route path="/viewReservation" Component={ViewReservation} />
+       */}
+         <Route path="/checkAvailability" element={<Slots />} />
+      <Route path="/viewReservation" element={<ViewReservation />} />
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

@@ -11,7 +11,10 @@ import RestaurantDetails from "./list-restaurant/RestaurantDetails";
 import RestaurantList from "./list-restaurant/RestaurantList";
 import "./list-restaurant/styles.css";
 import Footer from "./utils/Footer";
+import ViewReservation from "./views/Reservation/viewReservation";
 
+
+import Slots from "./views/Reservation/checkAvailability";
 export function isLoggedIn() {
   const token = localStorage.getItem("userData");
   return token !== null;
@@ -30,12 +33,14 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/first" element={<First />} />
-          <Route path="/*" element={<Navigate to="/first" />} />
+          {/* <Route path="/*" element={<Navigate to="/first" />} /> */}
           <Route path="/chatbot" element={<Chatbot />} />
           <Route path="/restaurantList" element={<RestaurantList />} />
           <Route path="/restaurant/:id" element={<RestaurantDetails />} />
+          <Route path="/checkAvailability" element={<Slots />} />
+      <Route path="/viewReservation" element={<ViewReservation />} />
         </Routes>
-        <Footer />
+        {/* <Footer /> */}
       </ScrollToTop>
     </BrowserRouter>
   );
