@@ -27,7 +27,7 @@ export default function NavbarLayout(props) {
   const location = useLocation();
 
   let navItems = [];
-  navItems = ["DemoPage2"];
+  navItems = ["Chatbot"];
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -54,7 +54,7 @@ export default function NavbarLayout(props) {
             <ListItemButton
               sx={{ textAlign: "center" }}
               onClick={() => {
-                navigate("/demopage2");
+                navigate("/chatbot");
               }}
             >
               <ListItemText primary={item} />
@@ -113,7 +113,7 @@ export default function NavbarLayout(props) {
                   key={item}
                   // sx={{ color: "#fff" }}
                   onClick={() => {
-                    navigate("/demopage2");
+                    navigate("/chatbot");
                   }}
                 >
                   {item}
