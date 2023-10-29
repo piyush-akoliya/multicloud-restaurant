@@ -1,13 +1,12 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword,GoogleAuthProvider } from 'firebase/auth';
 const firebaseConfig = {
-  apiKey: "AIzaSyDYeaaUHfp6NbEtNvfdnpaEe0T8x9FSuqI",
-  authDomain: "serverless-group-11.firebaseapp.com",
-  projectId: "serverless-group-11",
-  storageBucket: "serverless-group-11.appspot.com",
-  messagingSenderId: "1013386280517",
-  appId: "1:1013386280517:web:9f6b27a9fa77a07698ad2c",
-  measurementId: "G-NL7YXFBYLG"
+  apiKey: "AIzaSyCUQA_NSeDESD2VN57RHKuOMyUJHOUi9AI",
+  authDomain: "bookabite-auth2.firebaseapp.com",
+  projectId: "bookabite-auth2",
+  storageBucket: "bookabite-auth2.appspot.com",
+  messagingSenderId: "21428775249",
+  appId: "1:21428775249:web:22e604cbe6414bb9928b70"
 };
   const firebaseApp = initializeApp(firebaseConfig);
   export const auth = getAuth(firebaseApp);

@@ -117,7 +117,7 @@ function Signup() {
             showToast('Registration completed', 'success');
           
                 localStorage.setItem('userData', JSON.stringify(userData));
-                navigate('/DemoPage1');
+                navigate('/restaurantList');
           
           })
           .catch((error) => {
