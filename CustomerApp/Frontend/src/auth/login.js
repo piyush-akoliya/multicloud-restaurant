@@ -85,10 +85,10 @@ function Login() {
       .then((response) => {
         const data = response.data;
         console.log('API Response:', data);
-        navigate('/DemoPage1');
-        console.log(data);
+      
+   
             localStorage.setItem('userData', JSON.stringify(data));
-            navigate('/DemoPage1');
+            navigate('/restaurantList');
       })
       .catch((error) => {
         console.error('API request error:', error);
