@@ -101,30 +101,6 @@ function Signup() {
       return;
     }
     const userId = uuidv4();
-        
-        const userData = {
-          name,
-          contact,
-          role,
-          userId,
-          email
-        };
-        
-        axios.post('https://dd0kk3kq5f.execute-api.us-east-1.amazonaws.com/prod/signup', userData)
-          .then((response) => {
-            console.log('User information stored to Firestore.');
-            showToast('Registration completed', 'success');
-          
-                localStorage.setItem('userData', JSON.stringify(userData));
-                navigate('/restaurantList');
-          
-          })
-          .catch((error) => {
-            console.error('Error storing user information:', error.message);
-            showToast('Registration failed', 'error');
-          });
-      }
-  
 
     const userData = {
       name,
@@ -144,7 +120,7 @@ function Signup() {
         showToast("Registration completed", "success");
 
         localStorage.setItem("userData", JSON.stringify(userData));
-        navigate("/DemoPage1");
+        navigate("/restaurantList");
       })
       .catch((error) => {
         console.error("Error storing user information:", error.message);
