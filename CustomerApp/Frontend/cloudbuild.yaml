@@ -24,4 +24,4 @@ steps:
         "--allow-unauthenticated",
       ]
 images:
-  - "us-east1-docker.pkg.dev/serverless-402501/book-a-bite-customer-app/book-a-bite" # Change this to your image name
+  - "us-east1-docker.pkg.dev/serverless-402501/book-a-bite-customer-app/book-a-bite"
