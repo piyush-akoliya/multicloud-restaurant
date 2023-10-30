@@ -3,23 +3,26 @@ steps:
     args:
       - "build"
       - "-t"
-      - "us-east1-docker.pkg.dev/serverless-402501/book-a-bite-customer-app/book-a-bite" # Change this to your image name
-      - "."
+      - "us-east1-docker.pkg.dev/serverless-402501/book-a-bite-customer-app/book-a-bite"
+      - "./CustomerApp/Frontend"
   - name: "gcr.io/cloud-builders/docker"
     args:
       - "push"
-      - "us-east1-docker.pkg.dev/serverless-402501/book-a-bite-customer-app/book-a-bite" # Change this to your image name
+      - "us-east1-docker.pkg.dev/serverless-402501/book-a-bite-customer-app/book-a-bite"
   - name: "gcr.io/cloud-builders/gcloud"
     args:
-      - "run"
-      - "deploy"
-      - "book-a-bite"
-      - "--image"
-      - "us-east1-docker.pkg.dev/serverless-402501/book-a-bite-customer-app/book-a-bite" # Change this to your image name
-      - "--region"
-      - "us-east1"
-      - "--platform"
-      - "managed"
-      - "--allow-unauthenticated"
+      [
+        "gcloud",
+        "run",
+        "deploy",
+        "book-a-bite",
+        "--image",
+        "us-east1-docker.pkg.dev/serverless-402501/book-a-bite-customer-app/book-a-bite",
+        "--region",
+        "us-east1",
+        "--platform",
+        "managed",
+        "--allow-unauthenticated",
+      ]
 images:
-  - "us-east1-docker.pkg.dev/serverless-402501/book-a-bite-customer-app/book-a-bite" # Image name
+  - "us-east1-docker.pkg.dev/serverless-402501/book-a-bite-customer-app/book-a-bite"
