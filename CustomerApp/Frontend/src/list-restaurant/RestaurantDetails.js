@@ -3,7 +3,20 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import DetailsCard from './DetailsCard'; // Importing the DetailsCard component
-import { Grid, Typography, Box, Card, CardContent, Paper } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Box,
+  Card,
+  CardContent,
+  Paper,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
+} from '@mui/material';
 
 // RestaurantDetails component to display detailed information about a specific restaurant
 const RestaurantDetails = () => {
@@ -11,6 +24,8 @@ const RestaurantDetails = () => {
   const { id } = useParams();
   // Initializing the restaurant state
   const [restaurant, setRestaurant] = useState(null);
+  // State for managing the reservation dialog
+  const [isReserveDialogOpen, setReserveDialogOpen] = useState(false);
 
   // Using the useEffect hook to fetch restaurant data
   useEffect(() => {
@@ -31,6 +46,16 @@ const RestaurantDetails = () => {
 
     fetchRestaurantData();
   }, [id]);
+
+  // Function to handle opening the reservation dialog
+  const handleOpenReserveDialog = () => {
+    setReserveDialogOpen(true);
+  };
+
+  // Function to handle closing the reservation dialog
+  const handleCloseReserveDialog = () => {
+    setReserveDialogOpen(false);
+  };
 
   // Rendering a loading message if the restaurant data is not yet fetched
   if (!restaurant) {
@@ -61,8 +86,33 @@ const RestaurantDetails = () => {
           <Typography variant="subtitle1" gutterBottom>
             <b>Number of Tables:</b> {restaurant.restaurant_number_of_tables}
           </Typography>
+
+          {/* Reserve Table button */}
+          <Button variant="contained" color="primary" onClick={handleOpenReserveDialog} sx={{ mt: 2 }}>
+            Reserve Table
+          </Button>
         </CardContent>
       </Card>
+
+      {/* Dialog for reservation */}
+      <Dialog open={isReserveDialogOpen} onClose={handleCloseReserveDialog}>
+        <DialogTitle>Reserve a Table</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To reserve a table at {restaurant.restaurant_name}, please confirm your booking details.
+          </DialogContentText>
+          {/* Add reservation form or detail confirmation here */}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseReserveDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleCloseReserveDialog} color="primary" autoFocus>
+            Confirm Reservation
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {/* Displaying the restaurant's food menu using the DetailsCard component */}
       <Grid container spacing={3}>
         {restaurant?.restaurant_food_menu?.map((data, i) => (
