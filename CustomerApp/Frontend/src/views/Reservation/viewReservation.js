@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './ReservationList.css'; // Importing the CSS file
 
 const ReservationList = () => {
   const [reservations, setReservations] = useState([]);
@@ -29,33 +30,48 @@ const ReservationList = () => {
   }, [userId]);
 
   const convertTimestampToString = (timestamp) => {
-    if (timestamp && timestamp._seconds) {
-      const date = new Date(timestamp._seconds * 1000);
-      return date.toLocaleString(); // or any other format you prefer
+    console.log('Original Timestamp:', timestamp); // This will show the original timestamp you're passing
+
+    if (timestamp && timestamp.split(':').length > 3) {
+        timestamp = timestamp.replace(/:\d{2}Z$/, 'Z');
+        console.log('Adjusted Timestamp:', timestamp); // This will show the timestamp after adjustment
     }
-    return timestamp; // for cases where timestamp is already a string or other types
-  };
+
+    const dateObj = new Date(timestamp);
+    console.log('Date Object:', dateObj); // This will show the resultant date object
+
+    return { 
+        date: dateObj.toLocaleDateString(), 
+        time: dateObj.toLocaleTimeString() 
+    };
+};
+
+
+
 
   return (
     <div className="reservation-list">
       <h1>Reservations</h1>
       <ul>
-        {reservations.map(reservation => (
-          <li key={reservation.reservation_id}>
-            <h2>Reservation ID: {reservation.reservation_id}</h2>
-            <p>Status: {reservation.reservation_status}</p>
-            <p>Timestamp: {convertTimestampToString(reservation.reservation_timestamp)}</p>
-            <p>Restaurant: {reservation.restaurant_name}</p>
-            <p>Description: {reservation.description}</p>
-            <ul>
-              {reservation.food_reservation.map((food, index) => (
-                <li key={index}>
-                  Item ID: {food.item_id}, Quantity: {food.quantity}
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
+        {reservations.map(reservation => {
+          const { date, time } = convertTimestampToString(reservation.reservation_timestamp);
+          return (
+            <li key={reservation.reservation_id} className="reservation-item">
+              <p><strong>Status:</strong> {reservation.reservation_status}</p>
+              <p><strong>Date:</strong> {date}</p>
+              <p><strong>Time:</strong> {time}</p>
+              <p><strong>Restaurant:</strong> {reservation.restaurant_name}</p>
+              <p><strong>Description:</strong> {reservation.description}</p>
+              <ul className="food-list">
+                {reservation.food_reservation.map((food, index) => (
+                  <li key={index}>
+                    Item ID: {food.item_id}, Quantity: {food.quantity}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

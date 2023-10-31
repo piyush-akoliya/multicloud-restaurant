@@ -1,19 +1,23 @@
 // Importing necessary modules from React, axios, and react-router-dom, as well as the DetailsCard component and Material-UI components
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import DetailsCard from './DetailsCard'; // Importing the DetailsCard component
-import { Grid, Typography, Box, Card, CardContent, Paper } from '@mui/material';
+import { Grid, Typography, Box, Card, CardContent, Paper, Button } from '@mui/material';
 
 // RestaurantDetails component to display detailed information about a specific restaurant
 const RestaurantDetails = () => {
+  
   // Using the useParams hook to get the id from the route parameters
   const { id } = useParams();
   // Initializing the restaurant state
   const [restaurant, setRestaurant] = useState(null);
-
+  const navigate = useNavigate(); 
   // Using the useEffect hook to fetch restaurant data
   useEffect(() => {
+    
     const fetchRestaurantData = async () => {
       try {
         // Fetching data from the provided API endpoint
@@ -32,6 +36,10 @@ const RestaurantDetails = () => {
     fetchRestaurantData();
   }, [id]);
 
+  const handleReservationClick = () => {
+    navigate('/checkAvailability', { state: { restaurant: restaurant } });
+  };
+  
   // Rendering a loading message if the restaurant data is not yet fetched
   if (!restaurant) {
     return <div>Loading...</div>;
@@ -61,6 +69,9 @@ const RestaurantDetails = () => {
           <Typography variant="subtitle1" gutterBottom>
             <b>Number of Tables:</b> {restaurant.restaurant_number_of_tables}
           </Typography>
+          <Button variant="contained" color="primary" onClick={handleReservationClick}>
+              Book Reservation
+          </Button>
         </CardContent>
       </Card>
       {/* Displaying the restaurant's food menu using the DetailsCard component */}

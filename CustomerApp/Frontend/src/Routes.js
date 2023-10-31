@@ -7,8 +7,6 @@ import NavbarLayout from "./utils/NavbarLayout";
 import RestaurantDetails from "./list-restaurant/RestaurantDetails";
 import RestaurantList from "./list-restaurant/RestaurantList";
 import ViewReservation from "./views/Reservation/viewReservation";
-
-
 import Slots from "./views/Reservation/checkAvailability";
 import "./list-restaurant/styles.css";
 import Footer from "./utils/Footer";
