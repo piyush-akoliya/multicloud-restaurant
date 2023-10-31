@@ -29,9 +29,9 @@ const RestaurantDetails = () => {
     const fetchRestaurantData = async () => {
       try {
         // Make a GET request to the API to fetch restaurant details
-        const response = await axios.get('https://471h7c20q8.execute-api.us-east-1.amazonaws.com/Test-1/list-of-restaurants');
+        const response = await axios.get('https://b3irstkdylemeqtu2ep24jvtd40jsnnr.lambda-url.us-east-1.on.aws/');
         // Parse and clean the data received from the API
-        const data = JSON.parse(response.data.body.replace(/"(\s+)(\w+)(?=")/g, '"$2'));
+        const data = response.data;
         // Find the specific restaurant using the ID from URL parameters
         const selectedRestaurant = data.find((item) => item.restaurant_id === id);
         setRestaurant(selectedRestaurant);
