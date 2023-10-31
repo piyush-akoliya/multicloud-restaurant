@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import DetailsCard from "./DetailsCard";
 import {
   Grid,
@@ -62,7 +64,7 @@ const RestaurantDetails = () => {
     // Close the dialog
     setReserveDialogOpen(false);
     // Navigate to the check availability page
-    navigate("/checkAvailability");
+    navigate("/checkAvailability", { state: { restaurant: restaurant } });
   };
 
   // Show a loading state if the restaurant data is not yet loaded
