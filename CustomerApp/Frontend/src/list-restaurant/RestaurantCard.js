@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 
 // RestaurantCard component that displays information about a restaurant
 const RestaurantCard = ({ id, name, location, operationHours, numOfTables, foodMenu, imageUrl }) => {
-  
+  console.log(operationHours)
+ 
   // Rendering the restaurant card
   return (
     // Linking the card to the restaurant's specific page

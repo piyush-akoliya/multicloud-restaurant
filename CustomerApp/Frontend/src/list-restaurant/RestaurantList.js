@@ -15,13 +15,14 @@ const RestaurantList = () => {
       try {
         // Fetching data from the provided API endpoint
         const response = await axios.get(
-          'https://471h7c20q8.execute-api.us-east-1.amazonaws.com/Test-1/list-of-restaurants'
+          'https://b3irstkdylemeqtu2ep24jvtd40jsnnr.lambda-url.us-east-1.on.aws/'
         );
         // Parsing the received data
-        const data = JSON.parse(response.data.body.replace(/"(\s+)(\w+)(?=")/g, '"$2'));
-        console.log(data); // Logging the data to the console
+        // const data = JSON.parse(response.data.body.replace(/"(\s+)(\w+)(?=")/g, '"$2'));
+        // console.log(data); // Logging the data to the console
         // Setting the restaurants data in the state
-        setRestaurantsData(data);
+        if(response.data)
+        setRestaurantsData(response?.data);
       } catch (error) {
         console.error('Error fetching data: ', error); // Logging an error if the data fetching fails
       }
@@ -36,7 +37,7 @@ const RestaurantList = () => {
       <h1>List of Restaurants</h1> {/* Displaying the title */}
       <div className="restaurants">
         {/* Mapping through the restaurantsData and rendering each restaurant as a RestaurantCard component */}
-        {restaurantsData.map((restaurant, index) => (
+        {restaurantsData?.map((restaurant, index) => (
           <RestaurantCard
             key={index} // Using the index as the key
             id={restaurant.restaurant_id} // Passing the restaurant id
