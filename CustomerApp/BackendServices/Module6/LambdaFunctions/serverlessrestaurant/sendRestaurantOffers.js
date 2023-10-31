@@ -12,7 +12,7 @@ module.exports.sendRestaurantOffers = async (event) => {
 
   // Define DynamoDB scan parameters to retrieve restaurants with offers
   const params = {
-    TableName: "Restaurant", // Replace with your DynamoDB table name
+    TableName: "restaurants",
     FilterExpression: "attribute_exists(offers)",
   };
   console.log("Reached here::2");

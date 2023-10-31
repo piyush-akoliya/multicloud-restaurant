@@ -1,9 +1,9 @@
 // Importing necessary modules from React, axios, and react-router-dom, as well as the DetailsCard component and Material-UI components
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import DetailsCard from './DetailsCard'; // Importing the DetailsCard component
-import { Grid, Typography, Box, Card, CardContent, Paper } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import DetailsCard from "./DetailsCard"; // Importing the DetailsCard component
+import { Grid, Typography, Box, Card, CardContent, Paper } from "@mui/material";
 
 // RestaurantDetails component to display detailed information about a specific restaurant
 const RestaurantDetails = () => {
@@ -17,15 +17,21 @@ const RestaurantDetails = () => {
     const fetchRestaurantData = async () => {
       try {
         // Fetching data from the provided API endpoint
-        const response = await axios.get('https://471h7c20q8.execute-api.us-east-1.amazonaws.com/Test-1/list-of-restaurants');
+        const response = await axios.get(
+          "https://471h7c20q8.execute-api.us-east-1.amazonaws.com/Test-1/list-of-restaurants"
+        );
         // Parsing the received data
-        const data = JSON.parse(response.data.body.replace(/"(\s+)(\w+)(?=")/g, '"$2'));
+        const data = JSON.parse(
+          response.data.body.replace(/"(\s+)(\w+)(?=")/g, '"$2')
+        );
         // Finding the selected restaurant based on the id
-        const selectedRestaurant = data.find((item) => item.restaurant_id === id);
+        const selectedRestaurant = data.find(
+          (item) => item.restaurant_id === id
+        );
         // Setting the restaurant state
         setRestaurant(selectedRestaurant);
       } catch (error) {
-        console.error('Error fetching data: ', error);
+        console.error("Error fetching data: ", error);
       }
     };
 
@@ -50,7 +56,7 @@ const RestaurantDetails = () => {
             <b>Location:</b> {restaurant.restaurant_location}
           </Typography>
           <Typography variant="subtitle1" gutterBottom>
-            <b>Operation Hours:</b>{' '}
+            <b>Operation Hours:</b>{" "}
             {restaurant.restaurant_operation_details.map((time, index) => (
               <span key={index}>
                 {time.day} - {time.opening_time} to {time.closing_time}
@@ -67,7 +73,7 @@ const RestaurantDetails = () => {
       <Grid container spacing={3}>
         {restaurant?.restaurant_food_menu?.map((data, i) => (
           <Grid item sm={4} key={i}>
-            <Paper elevation={3} sx={{ padding: 2, height: '100%' }}>
+            <Paper elevation={3} sx={{ padding: 2, height: "100%" }}>
               <DetailsCard data={data} />
             </Paper>
           </Grid>
