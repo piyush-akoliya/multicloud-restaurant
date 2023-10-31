@@ -14,9 +14,6 @@ const RestaurantCard = ({
 }) => {
   console.log(operationHours);
 
-  if (operationHours == undefined) {
-    operationHours = [];
-  }
   // Rendering the restaurant card
   return (
     // Linking the card to the restaurant's specific page

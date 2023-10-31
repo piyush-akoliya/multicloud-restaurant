@@ -1,34 +1,43 @@
-// Importing necessary modules from React, axios, and react-router-dom, as well as the DetailsCard component and Material-UI components
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import DetailsCard from "./DetailsCard"; // Importing the DetailsCard component
-import { Grid, Typography, Box, Card, CardContent, Paper } from "@mui/material";
+import { useParams, useNavigate } from "react-router-dom";
+import DetailsCard from "./DetailsCard";
+import {
+  Grid,
+  Typography,
+  Box,
+  Card,
+  CardContent,
+  Paper,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 
-// RestaurantDetails component to display detailed information about a specific restaurant
+// Defines a component for displaying restaurant details
 const RestaurantDetails = () => {
-  // Using the useParams hook to get the id from the route parameters
-  const { id } = useParams();
-  // Initializing the restaurant state
-  const [restaurant, setRestaurant] = useState(null);
+  const { id } = useParams(); // Retrieves the restaurant ID from the URL parameters
+  const navigate = useNavigate(); // Hook to navigate to different routes
+  const [restaurant, setRestaurant] = useState(null); // State to hold restaurant details
+  const [isReserveDialogOpen, setReserveDialogOpen] = useState(false); // State for reservation dialog visibility
 
-  // Using the useEffect hook to fetch restaurant data
+  // Fetches restaurant data when the component mounts or when the id changes
   useEffect(() => {
     const fetchRestaurantData = async () => {
       try {
-        // Fetching data from the provided API endpoint
+        // Make a GET request to the API to fetch restaurant details
         const response = await axios.get(
-          "https://471h7c20q8.execute-api.us-east-1.amazonaws.com/Test-1/list-of-restaurants"
+          "https://b3irstkdylemeqtu2ep24jvtd40jsnnr.lambda-url.us-east-1.on.aws/"
         );
-        // Parsing the received data
-        const data = JSON.parse(
-          response.data.body.replace(/"(\s+)(\w+)(?=")/g, '"$2')
-        );
-        // Finding the selected restaurant based on the id
+        // Parse and clean the data received from the API
+        const data = response.data;
+        // Find the specific restaurant using the ID from URL parameters
         const selectedRestaurant = data.find(
           (item) => item.restaurant_id === id
         );
-        // Setting the restaurant state
         setRestaurant(selectedRestaurant);
       } catch (error) {
         console.error("Error fetching data: ", error);
@@ -36,14 +45,32 @@ const RestaurantDetails = () => {
     };
 
     fetchRestaurantData();
-  }, [id]);
+  }, [id]); // Only re-run the effect if the `id` changes
 
-  // Rendering a loading message if the restaurant data is not yet fetched
+  // Opens the reservation dialog
+  const handleOpenReserveDialog = () => {
+    setReserveDialogOpen(true);
+  };
+
+  // Closes the reservation dialog
+  const handleCloseReserveDialog = () => {
+    setReserveDialogOpen(false);
+  };
+
+  // Handles the reservation confirmation action
+  const handleConfirmReservation = () => {
+    // Close the dialog
+    setReserveDialogOpen(false);
+    // Navigate to the check availability page
+    navigate("/checkAvailability");
+  };
+
+  // Show a loading state if the restaurant data is not yet loaded
   if (!restaurant) {
     return <div>Loading...</div>;
   }
 
-  // Rendering the detailed information about the restaurant
+  // Render the restaurant details along with operation hours and reservation button
   return (
     <Box sx={{ padding: 4 }}>
       <Typography variant="h4" align="center" gutterBottom>
@@ -51,7 +78,6 @@ const RestaurantDetails = () => {
       </Typography>
       <Card sx={{ marginBottom: 4 }}>
         <CardContent>
-          {/* Displaying the restaurant's location, operation hours, and number of tables */}
           <Typography variant="subtitle1" gutterBottom>
             <b>Location:</b> {restaurant.restaurant_location}
           </Typography>
@@ -67,9 +93,36 @@ const RestaurantDetails = () => {
           <Typography variant="subtitle1" gutterBottom>
             <b>Number of Tables:</b> {restaurant.restaurant_number_of_tables}
           </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpenReserveDialog}
+            sx={{ mt: 2 }}
+          >
+            Reserve Table
+          </Button>
         </CardContent>
       </Card>
-      {/* Displaying the restaurant's food menu using the DetailsCard component */}
+
+      <Dialog open={isReserveDialogOpen} onClose={handleCloseReserveDialog}>
+        <DialogTitle>Reserve a Table</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To reserve a table at {restaurant.restaurant_name}, please confirm
+            your booking details.
+          </DialogContentText>
+          {/* Reservation form or detail confirmation can be added here */}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseReserveDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmReservation} color="primary" autoFocus>
+            Confirm Reservation
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <Grid container spacing={3}>
         {restaurant?.restaurant_food_menu?.map((data, i) => (
           <Grid item sm={4} key={i}>
@@ -83,5 +136,4 @@ const RestaurantDetails = () => {
   );
 };
 
-// Exporting the RestaurantDetails component
 export default RestaurantDetails;
