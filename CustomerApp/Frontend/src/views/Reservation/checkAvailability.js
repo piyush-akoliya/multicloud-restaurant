@@ -30,7 +30,7 @@ function BookingInterface() {
 
     const requestData = {
       operationHours: {
-        days: ["Monday", "Tuesday", "Wednesday"],
+        days: ["Monday", "Tuesday", "Wednesday","Thursday","Friday"],
         openingHour: 9,
         closingHour: 18
       },
