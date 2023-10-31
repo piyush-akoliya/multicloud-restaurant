@@ -9,6 +9,7 @@ exports.handler = async (event, context) => {
     const headers = {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
+        "Access-Control-Allow-Methods": "*"
     };
 
     try {
@@ -16,11 +17,11 @@ exports.handler = async (event, context) => {
         return {
             statusCode: 200,
             body: JSON.stringify(data.Items),
-            headers: headers,
+            // headers: headers,
         };
     } catch (error) {
         return {
-            statusCode: 500,
+           
             body: JSON.stringify(error.message),
             headers: headers,
         };
