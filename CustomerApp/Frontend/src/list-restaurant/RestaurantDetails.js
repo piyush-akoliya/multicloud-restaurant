@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { TextField } from "@mui/material";
 
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -21,6 +22,9 @@ import {
 
 // Defines a component for displaying restaurant details
 const RestaurantDetails = () => {
+  const [reservationDate, setReservationDate] = useState("");
+  const today = new Date().toISOString().split("T")[0];
+
   const { id } = useParams(); // Retrieves the restaurant ID from the URL parameters
   const navigate = useNavigate(); // Hook to navigate to different routes
   const [restaurant, setRestaurant] = useState(null); // State to hold restaurant details
@@ -61,10 +65,15 @@ const RestaurantDetails = () => {
 
   // Handles the reservation confirmation action
   const handleConfirmReservation = () => {
-    // Close the dialog
     setReserveDialogOpen(false);
+
     // Navigate to the check availability page
-    navigate("/checkAvailability", { state: { restaurant: restaurant } });
+    navigate("/checkAvailability", {
+      state: {
+        restaurant: restaurant,
+        date: reservationDate,
+      },
+    });
   };
 
   // Show a loading state if the restaurant data is not yet loaded
@@ -106,20 +115,48 @@ const RestaurantDetails = () => {
         </CardContent>
       </Card>
 
-      <Dialog open={isReserveDialogOpen} onClose={handleCloseReserveDialog}>
-        <DialogTitle>Reserve a Table</DialogTitle>
+      <Dialog
+        open={isReserveDialogOpen}
+        onClose={handleCloseReserveDialog}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>
+          <Typography variant="h6" align="center">
+            Reserve a Table
+          </Typography>
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            To reserve a table at {restaurant.restaurant_name}, please confirm
-            your booking details.
+          <DialogContentText align="center" gutterBottom>
+            To reserve a table at <strong>{restaurant.restaurant_name}</strong>,
+            please confirm your booking details.
           </DialogContentText>
-          {/* Reservation form or detail confirmation can be added here */}
+          <Box mt={2}>
+            <TextField
+              fullWidth
+              label="Reservation Date"
+              type="date"
+              value={reservationDate}
+              onChange={(e) => setReservationDate(e.target.value)}
+              InputProps={{ inputProps: { min: today } }} // Set the minimum date to today
+              InputLabelProps={{ shrink: true }}
+            />
+          </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseReserveDialog} color="primary">
+          <Button
+            variant="outlined"
+            onClick={handleCloseReserveDialog}
+            color="primary"
+          >
             Cancel
           </Button>
-          <Button onClick={handleConfirmReservation} color="primary" autoFocus>
+          <Button
+            variant="contained"
+            onClick={handleConfirmReservation}
+            color="primary"
+            autoFocus
+          >
             Confirm Reservation
           </Button>
         </DialogActions>

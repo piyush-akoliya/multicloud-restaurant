@@ -88,6 +88,8 @@ function Login() {
       
    
             localStorage.setItem('userData', JSON.stringify(data));
+            localStorage.setItem('user_id', JSON.stringify(data.userId));
+            
             navigate('/restaurantList');
       })
       .catch((error) => {
