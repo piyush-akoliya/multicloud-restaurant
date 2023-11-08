@@ -1,4 +1,4 @@
-/**import React, { Component } from "react";
+import React, { Component } from "react";
 import AWS from "aws-sdk";
 import {
   Button,
@@ -19,8 +19,8 @@ class App extends Component {
     this.messagesEndRef = React.createRef();
     AWS.config.update({
       region: "us-east-1",
-      accessKeyId: "AKIAYMKNWDA6YEKOHLFZ",
-      secretAccessKey: "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",
+      accessKeyId: "",
+      secretAccessKey: "",
     });
 
     this.state = {
@@ -141,9 +141,8 @@ class App extends Component {
             }}
           >
             {this.state.conversations.map(this.renderResponse)}
-            <div ref={this.messagesEndRef} />{" "}
-            
-         /* </Box>
+            <div ref={this.messagesEndRef} /> /*{" "}
+          </Box>
           <TextField
             label="Type your message"
             variant="outlined"
@@ -166,4 +165,3 @@ class App extends Component {
 }
 
 export default App;
-**/
