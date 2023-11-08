@@ -1,4 +1,4 @@
-/**import React, { Component } from "react";
+import React, { Component } from "react";
 import AWS from "aws-sdk";
 import {
   Button,
@@ -141,9 +141,8 @@ class App extends Component {
             }}
           >
             {this.state.conversations.map(this.renderResponse)}
-            <div ref={this.messagesEndRef} />{" "}
-            
-         /* </Box>
+            <div ref={this.messagesEndRef} />
+          </Box>
           <TextField
             label="Type your message"
             variant="outlined"
@@ -166,4 +165,3 @@ class App extends Component {
 }
 
 export default App;
-**/
