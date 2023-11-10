@@ -1,5 +1,8 @@
 import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
+import ViewReservation from "./views/Reservation/viewReservation";
+
+import Slots from "./views/Reservation/checkAvailability";
 
 import Demo from "./views/Demo";
 import NavbarLayout from "./utils/NavbarLayout";
@@ -11,6 +14,8 @@ const Router = () => {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<NavbarLayout />}>
           <Route path="/" element={<Demo />} />
+          <Route path="/checkAvailability" element={<Slots />} />
+          <Route path="/viewReservation" element={<ViewReservation />} />
         </Route>
       </Routes>
     </>
