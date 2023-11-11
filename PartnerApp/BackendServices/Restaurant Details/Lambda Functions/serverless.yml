@@ -1,0 +1,19 @@
+service: lambda-functions
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  iam:
+    role: arn:aws:iam::396432946857:role/LabRole
+
+functions:
+  addOperationsDetails:
+    handler: addOperationsDetails.addOperationsDetails
+  addFoodMenuItem:
+    handler: addFoodMenuItem.addFoodMenuItem
+  addTableDetails:
+    handler: addTableDetails.addTableDetails
+  getTotalTables:
+    handler: getTotalTables.getTotalTables
