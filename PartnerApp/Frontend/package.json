@@ -5,6 +5,8 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@fullcalendar/daygrid": "^6.1.9",
+    "@fullcalendar/react": "^6.1.9",
     "@mui/icons-material": "^5.14.12",
     "@mui/material": "^5.14.12",
     "@mui/styled-engine-sc": "^5.14.12",
@@ -14,6 +16,7 @@
     "aws-sdk": "^2.1483.0",
     "axios": "^1.5.1",
     "firebase": "^10.5.0",
+    "fullcalendar": "^6.1.9",
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
