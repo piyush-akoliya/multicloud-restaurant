@@ -18,6 +18,7 @@ function BookingInterface() {
 
   const today = new Date().toISOString().split('T')[0];
   const handleDateInputChange = (event) => {
+    
     const newDate = event.target.value;
     const dateNow = new Date();
     const selectedDate = new Date(newDate);
