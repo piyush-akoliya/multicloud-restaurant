@@ -77,7 +77,7 @@ function Login() {
   };
 
   const makeAPIRequest = (email) => {
-    const apiUrl = 'https://dd0kk3kq5f.execute-api.us-east-1.amazonaws.com/prod/get-role';
+    const apiUrl = 'https://aqs85q6n1m.execute-api.us-east-1.amazonaws.com/prod/get-role-restaurant';
     const requestBody = { email };
 
     axios
@@ -89,7 +89,9 @@ function Login() {
    
             localStorage.setItem('userData', JSON.stringify(data));
             localStorage.setItem('user_id', JSON.stringify(data.userId));
-            
+            console.log("res"+(data.restaurantId))
+            localStorage.setItem('restaurant_id', JSON.stringify(data.restaurantId));
+            console.log(localStorage.getItem('userData'))
             navigate('/restaurantList');
       })
       .catch((error) => {

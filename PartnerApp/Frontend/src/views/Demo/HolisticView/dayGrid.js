@@ -23,8 +23,10 @@ function MyCalendarComponent({ restaurantId }) {
   useEffect(() => {
     const fetchEvents = async (start, end) => {
       const requestData = {
-        restaurant_id: 1,
+        restaurant_id: localStorage.getItem('restaurant_id')
         };
+        const resID=localStorage.getItem('restaurant_id');
+        console.log(resID)
 
       try {
         const response = await fetch('https://aqs85q6n1m.execute-api.us-east-1.amazonaws.com/prod/getdailyview', {
@@ -36,6 +38,7 @@ function MyCalendarComponent({ restaurantId }) {
         });
 
         const data = await response.json();
+        console.log("data"+data)
         data.forEach(item => {
             console.log(item);
           });

@@ -121,8 +121,12 @@ function Signup() {
     }
     const userId = uuidv4();
  // Generate a unique restaurant ID
- const restaurantId = uuidv4();
-
+ const generateReservationId = () => {
+  const timestamp = Date.now(); // current timestamp
+  const randomDigits = Math.floor(Math.random() * 1000); // Generate a random three-digit number
+  return Number(`${timestamp}${randomDigits}`);
+}
+const restaurantId = generateReservationId();
  // Create the restaurant data object to send to the DynamoDB Lambda
  const restaurantData = {
    restaurant_id: restaurantId,
