@@ -91,6 +91,11 @@ function Signup() {
 
   const handleCompleteRegistration = async () => {
     let imageUrl = '';
+
+    if (!selectedImage) {
+      showToast("Please select an image to upload.", "warning");
+      return; // Stop the registration process if no image is selected
+    }
     try {
       imageUrl = await handleImageUpload(); // This will upload the image and return the URL
      console.log(imageUrl);
