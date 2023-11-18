@@ -23,6 +23,8 @@ const Router = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/grid" element={<MyCalendarComponent />} />
         <Route path="/" element={<NavbarLayout />}>
+          <Route path="/menu" element={<Menu />} />
+          <Route path="/viewReservation" element={<ViewReservation />} />
           <Route path="/" element={<AddMenuItemForm />} />
           <Route
             path="/ReservationCancellation"
