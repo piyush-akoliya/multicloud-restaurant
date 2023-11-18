@@ -6,3 +6,8 @@ const updateReservationDescriptionFunction = require("./src/updateReservationDes
 exports.updateReservationDescription = onRequest(async (req, res) => {
   updateReservationDescriptionFunction.handler(req, res);
 });
+
+const checkTablesAvailabilityFunction = require("./src/checkTablesAvailability");
+exports.checkTablesAvailability = onRequest(async (req, res) => {
+  checkTablesAvailabilityFunction.handler(req, res);
+});

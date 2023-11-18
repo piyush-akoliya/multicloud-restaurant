@@ -6,6 +6,7 @@ import NavbarLayout from "./utils/NavbarLayout";
 import RestaurantAvailabilityForm from "./views/Demo/Restaurant Details/RestaurantAvailabilityForm";
 import TableDetails from "./views/Demo/Restaurant Details/TableDetails";
 import ReservationCancellation from "./views/Demo/Restaurant Details/ReservationCancellation";
+import AddMenuItemForm from "./views/Demo/Restaurant Details/AddMenuItemForm";
 const Router = () => {
   const location = useLocation();
 
@@ -13,7 +14,11 @@ const Router = () => {
     <>
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<NavbarLayout />}>
-          <Route path="/" element={<ReservationCancellation />} />
+          <Route path="/" element={<AddMenuItemForm />} />
+          <Route
+            path="/ReservationCancellation"
+            element={<ReservationCancellation />}
+          />
           <Route
             path="/RestaurantAvailabilityForm"
             element={<RestaurantAvailabilityForm />}

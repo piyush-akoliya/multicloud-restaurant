@@ -1,17 +1,20 @@
 const AWS = require("aws-sdk");
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
+const s3 = new AWS.S3();
 const tableName = "restaurants";
-const headers = {
-  "Access-Control-Allow-Headers":
-    "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
-  "Access-Control-Allow-Methods": "*",
-  "Access-Control-Allow-Origin": "*",
-};
+const bucketName = "serverless-restaurant-b00920744"; // Replace with your S3 bucket name
+
 module.exports.addFoodMenuItem = async (event) => {
+  console.log(event);
+  console.log("event:::body");
+  console.log(event.body);
   const requestBody = JSON.parse(event.body);
   const restaurantId = requestBody.restaurant_id;
-  const newFoodMenuItem = requestBody.food_menu_item;
+  const newFoodMenuItem = {
+    ...requestBody.food_menu_item,
+    item_id: generateItemId(),
+  };
 
   if (!restaurantId || !newFoodMenuItem) {
     console.error(
@@ -26,15 +29,32 @@ module.exports.addFoodMenuItem = async (event) => {
     };
   }
 
-  // Fetch the existing menu items from DynamoDB
-  const getParams = {
-    TableName: tableName,
-    Key: {
-      restaurant_id: restaurantId,
-    },
-  };
-
   try {
+    // Upload image to S3
+    const imageKey = `${restaurantId}-${newFoodMenuItem.menu_item_name.replace(
+      " ",
+      "-"
+    )}.jpg`;
+    const s3Params = {
+      Bucket: bucketName,
+      Key: imageKey,
+      Body: Buffer.from(requestBody.image, "base64"),
+    };
+
+    const s3UploadResult = await s3.upload(s3Params).promise();
+    const imageUrl = s3UploadResult.Location;
+
+    // Update the newFoodMenuItem with the image URL
+    newFoodMenuItem.menu_image = imageUrl;
+
+    // Fetch the existing menu items from DynamoDB
+    const getParams = {
+      TableName: tableName,
+      Key: {
+        restaurant_id: restaurantId,
+      },
+    };
+
     const getResult = await dynamoDB.get(getParams).promise();
     const existingFoodMenuItems = getResult.Item?.restaurant_food_menu || [];
 
@@ -79,3 +99,8 @@ module.exports.addFoodMenuItem = async (event) => {
     };
   }
 };
+
+// Function to generate a unique item_id
+function generateItemId() {
+  return Math.floor(Math.random() * 1000000); // You can use a more robust method to generate IDs
+}

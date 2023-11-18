@@ -40,3 +40,31 @@ functions:
           path: /getTotalTables
           method: GET
           cors: true
+resources:
+  Resources:
+    MyS3BucketPiyush:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: serverless-restaurant-b00920744
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: false
+          BlockPublicPolicy: false
+          IgnorePublicAcls: false
+          RestrictPublicBuckets: false
+
+    MyBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: !Ref MyS3BucketPiyush
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Action:
+                - "s3:*"
+              Effect: "Allow"
+              Resource: !Join
+                - ""
+                - - "arn:aws:s3:::"
+                  - !Ref MyS3BucketPiyush
+                  - /*
+              Principal: "*"
