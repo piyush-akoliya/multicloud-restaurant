@@ -1,4 +1,3 @@
-
 const admin = require("firebase-admin");
 const functions = require("@google-cloud/functions-framework");
 const cors = require("cors");
@@ -57,4 +56,4 @@ const wrappedProcessRequest = (req, res) => {
 };
 
 // Create a Google Cloud Function that listens to HTTP requests
-functions.http("updateReservation", wrappedProcessRequest);
+functions.http("updateReservationId", wrappedProcessRequest);

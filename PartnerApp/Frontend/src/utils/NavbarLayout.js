@@ -27,7 +27,7 @@ export default function NavbarLayout(props) {
   const location = useLocation();
 
   let navItems = [];
-  navItems = ["Demo"];
+  navItems = ["Menu"];
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -54,7 +54,7 @@ export default function NavbarLayout(props) {
             <ListItemButton
               sx={{ textAlign: "center" }}
               onClick={() => {
-                navigate("/");
+                navigate("/" + item);
               }}
             >
               <ListItemText primary={item} />
@@ -113,7 +113,7 @@ export default function NavbarLayout(props) {
                   key={item}
                   // sx={{ color: "#fff" }}
                   onClick={() => {
-                    navigate("/");
+                    navigate("/" + item);
                   }}
                 >
                   {item}
