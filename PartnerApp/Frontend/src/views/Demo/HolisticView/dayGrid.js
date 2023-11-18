@@ -21,12 +21,18 @@ function MyCalendarComponent({ restaurantId }) {
   
 
   useEffect(() => {
+
+    const resIDStr=localStorage.getItem('restaurant_id');
+        
+        const resID = parseInt(resIDStr); 
+        const typeOfResID = typeof resID;
+console.log(typeOfResID);
+        console.log(resID)
     const fetchEvents = async (start, end) => {
       const requestData = {
-        restaurant_id: localStorage.getItem('restaurant_id')
+        restaurant_id: resID
         };
-        const resID=localStorage.getItem('restaurant_id');
-        console.log(resID)
+        
 
       try {
         const response = await fetch('https://aqs85q6n1m.execute-api.us-east-1.amazonaws.com/prod/getdailyview', {
