@@ -26,6 +26,7 @@ import CustomBackdrop from "../../utils/Backdrop";
 
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useNavigate } from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -184,13 +185,15 @@ const RestaurantMenuPage = () => {
   const [currentEditItem, setCurrentEditItem] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deleteItemId, setDeleteItemId] = useState(null);
-
+  const [restaurantId, setRestaurantId] = useState(null);
   const [imageUpdates, setImageUpdates] = useState([]);
 
   const [backdrop, setBackdrop] = React.useState(true);
 
   const [isMainOffersModalOpen, setIsMainOffersModalOpen] = useState(false);
   const [mainOffer, setMainOffer] = useState("");
+
+  const navigate = useNavigate();
 
   const handleOpenMainOffersModal = () => {
     setIsMainOffersModalOpen(true);
@@ -205,7 +208,7 @@ const RestaurantMenuPage = () => {
     setBackdrop(true);
     try {
       const payload = {
-        restaurant_id: "1",
+        restaurant_id: restaurantId,
         restaurant_offers: mainOffer,
       };
 
@@ -223,10 +226,10 @@ const RestaurantMenuPage = () => {
     setIsMainOffersModalOpen(false);
   };
 
-  const fetchMenuData = async () => {
+  const fetchMenuData = async (restaurantId) => {
     try {
       const response = await axios.post(apiBaseUrl + "get-menu", {
-        restaurant_id: "1",
+        restaurant_id: restaurantId,
       });
       if (
         response.data &&
@@ -248,8 +251,14 @@ const RestaurantMenuPage = () => {
 
   useEffect(() => {
     setBackdrop(true);
-    console.log("fetchMenuData()");
-    fetchMenuData();
+    const restaurantId = localStorage.getItem("restaurant_id");
+    if (restaurantId) {
+      console.log(restaurantId);
+      setRestaurantId(restaurantId);
+      fetchMenuData(restaurantId);
+    } else {
+      navigate("/login");
+    }
   }, [setData]);
 
   const handleEditToggle = () => {
@@ -260,15 +269,12 @@ const RestaurantMenuPage = () => {
     setBackdrop(true);
     try {
       const payload = {
-        restaurant_id: "1",
+        restaurant_id: restaurantId,
         menuData: menuData,
         imageUpdates: imageUpdates,
       };
 
-      const response = await axios.post(
-        "https://3ithnk2mg5.execute-api.us-east-1.amazonaws.com/dev/save-menu",
-        payload
-      );
+      const response = await axios.post(apiBaseUrl + "save-menu", payload);
       setBackdrop(false);
       console.log(response.data);
       // Handle the response as needed
