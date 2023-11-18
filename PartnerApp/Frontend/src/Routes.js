@@ -8,8 +8,10 @@ import Signup from "./auth/signup";
 import MyCalendarComponent from "./views/Demo/HolisticView/dayGrid";
 
 import NavbarLayout from "./utils/NavbarLayout";
-import Menu from "./views/Menu";
-
+import RestaurantAvailabilityForm from "./views/Demo/Restaurant Details/RestaurantAvailabilityForm";
+import TableDetails from "./views/Demo/Restaurant Details/TableDetails";
+import ReservationCancellation from "./views/Demo/Restaurant Details/ReservationCancellation";
+import AddMenuItemForm from "./views/Demo/Restaurant Details/AddMenuItemForm";
 const Router = () => {
   const location = useLocation();
 
@@ -23,7 +25,16 @@ const Router = () => {
         <Route path="/" element={<NavbarLayout />}>
           <Route path="/menu" element={<Menu />} />
           <Route path="/viewReservation" element={<ViewReservation />} />
-          
+          <Route path="/" element={<AddMenuItemForm />} />
+          <Route
+            path="/ReservationCancellation"
+            element={<ReservationCancellation />}
+          />
+          <Route
+            path="/RestaurantAvailabilityForm"
+            element={<RestaurantAvailabilityForm />}
+          />
+          <Route path="/TableDetails" element={<TableDetails />} />
         </Route>
       </Routes>
     </>
