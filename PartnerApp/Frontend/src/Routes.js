@@ -6,6 +6,8 @@ import MyCalendarComponent from "./views/Demo/HolisticView/dayGrid";
 
 import Demo from "./views/Demo";
 import NavbarLayout from "./utils/NavbarLayout";
+import Menu from "./views/Menu";
+
 const Router = () => {
   const location = useLocation();
 
@@ -18,6 +20,7 @@ const Router = () => {
         <Route path="/grid" element={<MyCalendarComponent />} />
         <Route path="/" element={<NavbarLayout />}>
           <Route path="/" element={<Demo />} />
+          <Route path="/menu" element={<Menu />} />
         </Route>
       </Routes>
     </>
