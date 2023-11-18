@@ -1,45 +1,48 @@
-// Importing required Firebase Admin SDK and CORS modules
+
 const admin = require("firebase-admin");
+const functions = require("@google-cloud/functions-framework");
 const cors = require("cors");
 
-// Importing Firebase service account credentials
-const serviceAccount = require("./serviceAccount.json");
 
-// Initializing Firebase Admin SDK with the credentials
+// Initialize the Firebase Admin SDK with your credentials file
+const serviceAccount = require("./serviceAccount.json");
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-// Function to handle the addition of a new reservation
+
+// Function to handle the request
 const processRequest = async (req, res) => {
  
-  // Ensuring the HTTP method is POST
-  if (req.method !== 'POST') {
-      return res.status(400).json({ error: 'Invalid request method' });
+if (req.method !== 'POST') {
+    return res.status(400).json({ error: 'Invalid request method' });
   }
+
 
   try {
-      const db = admin.firestore();
-      const newReservation = req.body; // Extracting the reservation details from the request body
+    const db = admin.firestore();
+    const newReservation = req.body;
 
-      // Adding the new reservation data to the "Reservation" collection
-      const reservationsRef = db.collection('Reservation');
-      const docRef = await reservationsRef.add(newReservation);
 
-      // Responding with a success message and the document ID of the newly added reservation
-      return res.status(201).json({ message: 'Reservation added', id: docRef.id });
+    // Add a new reservation document to the "Reservation" collection
+    const reservationsRef = db.collection('Reservation');
+    const docRef = await reservationsRef.add(newReservation);
+
+    
+    return res.status(201).json({ message: 'Reservation added', id: docRef.id });
   } catch (error) {
-      // Handling any errors that occur during the addition of the reservation
-      return res.status(500).json({ error: 'Error adding reservation' });
+    return res.status(500).json({ error: 'Error adding reservation' });
   }
 };
 
-// Wrapping the main function with CORS middleware to handle cross-origin requests
+
+// Function to wrap processRequest with CORS handling
 const wrappedProcessRequest = (req, res) => {
-    cors()(req, res, () => {
-        processRequest(req, res);
-    });
+  cors()(req, res, () => {
+    processRequest(req, res);
+  });
 };
 
-// Exposing the function as an HTTP endpoint named "addReservation"
+
+// Create a Google Cloud Function that listens to HTTP requests
 functions.http("addReservation", wrappedProcessRequest);

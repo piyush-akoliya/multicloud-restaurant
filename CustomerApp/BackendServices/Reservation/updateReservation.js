@@ -1,65 +1,60 @@
-// Import necessary modules
+
 const admin = require("firebase-admin");
 const functions = require("@google-cloud/functions-framework");
 const cors = require("cors");
 
-// Function to handle the request to update a reservation
-const updateReservation = async (req, res) => {
+// Initialize the Firebase Admin SDK with your credentials file
+const serviceAccount = require("./serviceAccount.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+
+// Function to handle the request
+const processRequest = async (req, res) => {
  
-  // Ensure the request method is POST, otherwise return an error
-  if (req.method !== 'POST') {
+if (req.method !== 'POST') {
     return res.status(400).json({ error: 'Invalid request method' });
-  }
+}
 
   try {
-    // Get a Firestore database instance
     const db = admin.firestore();
+    const reservationData = req.body;
+    const reservationsRef = db.collection('Reservation');
 
-    // Destructure reservationId and updatedReservation from the request body
-    const { reservationId, updatedReservation } = req.body;
-
-    // Reference the reservation document using the provided reservationId
-    const reservationRef = db.collection('Reservation').doc(reservationId);
-    const query = reservationRef.where('reservation_id', '==', reservationId);
-
-    // Fetch the reservation from Firestore
-    const reservationSnapshot = await query.get();
-
-    // Check if the reservation exists, if not, return an error
-    if (!reservationSnapshot.exists) {
-      return res.status(404).json({ error: 'Reservation not found' });
-    }
-
-    // Extract data from the reservation snapshot
-    const reservationData = reservationSnapshot.data();
-
-    // Calculate the time difference between the reservation time and current time
-    const reservationTime = reservationData.reservation_timestamp.toDate();
-    const currentTime = new Date();
-    const diffInHours = (reservationTime - currentTime) / (1000 * 60 * 60);
-
-    // If the reservation time is less than 1 hour away, disallow updates
-    if (diffInHours <= 1) {
-      return res.status(400).json({ error: 'Cannot update the reservation less than 1 hour before the reservation time' });
-    }
-
-    // If all conditions are met, update the reservation in Firestore
-    await reservationRef.update(updatedReservation);
-
-    // Send a success response
-    return res.status(200).json({ message: 'Reservation updated' });
+    if (reservationData.id) {
+        try {
+          // Find the document that matches the reservation_id
+          const snapshot = await reservationsRef.where("reservation_id", "==", reservationData.id).get();
+          if (snapshot.empty) {
+            return res.status(404).json({ error: 'No matching reservation found' });
+          }
+    
+          // There should be only one matching document since reservation_id is unique
+          const docRef = snapshot.docs[0].ref;
+          delete reservationData.id; // Remove the id field from the update payload
+    
+          await docRef.update(reservationData);
+          return res.status(200).json({ message: 'Reservation updated', id: docRef.id });
+    
+        } catch (error) {
+          return res.status(500).json({ error: 'Error updating reservation: ' + error.message });
+        }
+      } else {
+        return res.status(400).json({ error: 'Reservation ID not provided' });
+      }
+    
   } catch (error) {
-    // Handle any errors during the process
-    return res.status(500).json({ error: 'Error updating reservation' });
+    return res.status(500).json({ error: 'Error processing reservation' });
   }
 };
 
-// Function to wrap the main request handler with CORS handling
-const wrappedUpdateReservation = (req, res) => {
+
+// Function to wrap processRequest with CORS handling
+const wrappedProcessRequest = (req, res) => {
   cors()(req, res, () => {
-    updateReservation(req, res);
+    processRequest(req, res);
   });
 };
 
-// Expose the function to be accessible via HTTP with the name "updateReservation"
-functions.http("updateReservation", wrappedUpdateReservation);
+// Create a Google Cloud Function that listens to HTTP requests
+functions.http("updateReservation", wrappedProcessRequest);
