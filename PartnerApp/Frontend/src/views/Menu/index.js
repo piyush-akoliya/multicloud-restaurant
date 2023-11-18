@@ -27,10 +27,6 @@ import CustomBackdrop from "../../utils/Backdrop";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
-// Mock Data - Replace with actual API data
-// const mockData = require("./menu.json"); // Adjust the path to where your JSON is.
-
-// Styled Components
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
@@ -38,7 +34,9 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-// Helper component to render menu items as rows
+const apiBaseUrl =
+  "https://3ithnk2mg5.execute-api.us-east-1.amazonaws.com/dev/";
+
 const MenuItemRow = ({
   item,
   onEdit,
@@ -52,7 +50,7 @@ const MenuItemRow = ({
     item.menu_item_availability === "available"
   );
   const [editableItem, setEditableItem] = useState({ ...item });
-  const [imageSrc, setImageSrc] = useState(item.menu_image); // State for the image source
+  const [imageSrc, setImageSrc] = useState(item.menu_image);
   const fileInputRef = useRef(null);
 
   const handleToggle = (event) => {
@@ -75,7 +73,7 @@ const MenuItemRow = ({
       reader.onloadend = () => {
         const base64String = reader.result;
         setImageSrc(base64String);
-        onUpdateImage(item.menu_item_id, base64String); // Update the image in the parent component
+        onUpdateImage(item.menu_item_id, base64String);
       };
       reader.readAsDataURL(file);
     }
@@ -191,12 +189,6 @@ const RestaurantMenuPage = () => {
 
   const [backdrop, setBackdrop] = React.useState(true);
 
-  // Load data from JSON on page load
-  // useEffect(() => {
-  //   setData(mockData);
-  //   setMenuData(mockData.restaurant_food_menu);
-  // }, []);
-
   const [isMainOffersModalOpen, setIsMainOffersModalOpen] = useState(false);
   const [mainOffer, setMainOffer] = useState("");
 
@@ -210,7 +202,6 @@ const RestaurantMenuPage = () => {
 
   const handleSaveMainOffer = async () => {
     console.log("Main Offer:", mainOffer);
-    // Implement logic to apply the offer to the menu
     setBackdrop(true);
     try {
       const payload = {
@@ -219,16 +210,14 @@ const RestaurantMenuPage = () => {
       };
 
       const response = await axios.post(
-        "https://3ithnk2mg5.execute-api.us-east-1.amazonaws.com/dev/update-menu-offers",
+        apiBaseUrl + "update-menu-offers",
         payload
       );
       setBackdrop(false);
       console.log(response.data);
-      // Handle the response as needed
     } catch (error) {
       setBackdrop(false);
       console.error("Error saving data:", error);
-      // Handle error appropriately
     }
 
     setIsMainOffersModalOpen(false);
@@ -236,11 +225,9 @@ const RestaurantMenuPage = () => {
 
   const fetchMenuData = async () => {
     try {
-      const response = await axios.post(
-        "https://3ithnk2mg5.execute-api.us-east-1.amazonaws.com/dev/get-menu",
-        { restaurant_id: "1" }
-      );
-      // console.log(response);
+      const response = await axios.post(apiBaseUrl + "get-menu", {
+        restaurant_id: "1",
+      });
       if (
         response.data &&
         response.data.statusCode == 200 &&
@@ -256,7 +243,6 @@ const RestaurantMenuPage = () => {
     } catch (error) {
       console.error("Error fetching menu data:", error);
       setBackdrop(false);
-      // Handle error appropriately
     }
   };
 
@@ -345,13 +331,11 @@ const RestaurantMenuPage = () => {
   };
 
   const onUpdateImage = (itemId, newImageBase64) => {
-    // Check if the item already exists in the imageUpdates array
     const existingUpdateIndex = imageUpdates.findIndex(
       (update) => update.menu_item_id === itemId
     );
 
     if (existingUpdateIndex > -1) {
-      // If it exists, update the base64 string
       const newImageUpdates = [...imageUpdates];
       newImageUpdates[existingUpdateIndex] = {
         menu_item_id: itemId,
@@ -359,7 +343,6 @@ const RestaurantMenuPage = () => {
       };
       setImageUpdates(newImageUpdates);
     } else {
-      // If it doesn't exist, add a new entry
       setImageUpdates((prev) => [
         ...prev,
         { menu_item_id: itemId, menu_image_base64: newImageBase64 },
@@ -463,9 +446,9 @@ const RestaurantMenuPage = () => {
             <Box
               p={2}
               style={{
-                width: "auto", // Adjust width as needed
-                minWidth: "300px", // Set a minimum width
-                maxWidth: "90%", // Limit the maximum width
+                width: "auto",
+                minWidth: "300px",
+                maxWidth: "90%",
               }}
             >
               <Paper style={{ padding: "20px", textAlign: "center" }}>
@@ -541,7 +524,6 @@ const RestaurantMenuPage = () => {
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={backdrop}
-        // onClick={handleClose}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
