@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Grid, Button } from "@mui/material";
+import { Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Chip} from "@mui/material";
 import "./ReservationList.css";
 
 const ReservationList = () => {
@@ -12,6 +12,9 @@ const ReservationList = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("info");
   const [loading, setLoading] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [currentReservationId, setCurrentReservationId] = useState(null);
+  const [actionType, setActionType] = useState('');
 
   const resId = localStorage.getItem("restaurant_id");
   const userId = localStorage.getItem("user_id");
@@ -23,6 +26,24 @@ const ReservationList = () => {
   const [availableSlots, setAvailableSlots] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [updatingReservationId, setUpdatingReservationId] = useState(null);
+
+  const handleOpenDialog = (reservationId, action) => {
+    setCurrentReservationId(reservationId);
+    setActionType(action);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setCurrentReservationId(null);
+    setActionType('');
+  };
+
+  const confirmAction = async () => {
+    await handleStatusChange(currentReservationId, actionType);
+    handleCloseDialog();
+    window.location.reload(); // Reload the page
+  };
 
   const fetchAvailableSlots = async (restaurantId) => {
     const JsonBody = JSON.stringify({
@@ -227,9 +248,15 @@ const ReservationList = () => {
         }
       );
       if (response.status === 200) {
+        setReservations(prevReservations =>
+            prevReservations.map(reservation =>
+              reservation.reservation_id === reservationId
+                ? { ...reservation, reservation_status: newStatus }
+                : reservation
+            )
+          );
         setSnackbarMessage(`Reservation ${newStatus}`);
         setSnackbarSeverity("success");
-        fetchReservations(); // Refetch the reservations to update the list
       }
     } catch (error) {
       console.error("Error updating reservation:", error);
@@ -238,6 +265,7 @@ const ReservationList = () => {
     }
     setLoading(false);
     setSnackbarOpen(true);
+    handleCloseDialog();
   };
   // Define canModifyReservation function
   const canModifyReservation = (reservationTimestamp) => {
@@ -272,6 +300,7 @@ const ReservationList = () => {
   };
 
   return (
+    <>
     <div className="reservation-list">
       <h1>Reservations</h1>
       <ul>
@@ -291,7 +320,6 @@ const ReservationList = () => {
               <CustomComp data="Resturant :" value= {restaurantNames[reservation.restaurant_id] || "Unknown"} />
               <CustomComp data="No of tables :" value={reservation.no_of_tables} />
              
-              
               
               <ul className="food-list">
                 {reservation.food_reservation.map((food, index) => (
@@ -327,22 +355,23 @@ const ReservationList = () => {
               >
                 Delete 
               </button>
-              <Button
+              {reservation.reservation_status != "Pending" ? (<Chip label={reservation.reservation_status} color="primary" />
+                    ) : (
+                      <>
+                      <Button
                     onClick={() =>
-                      handleStatusChange(reservation.reservation_id, "approved")
+                        handleOpenDialog(reservation.reservation_id, "Approve")
                     }
-                    // disabled={!canModifyReservation(reservation.start_time)}
-                  >
+                    >
                     Approve
                   </Button>
                   <Button
                     onClick={() =>
-                      handleStatusChange(reservation.reservation_id, "rejected")
+                        handleOpenDialog(reservation.reservation_id, "Reject")
                     }
-                    // disabled={!canModifyReservation(reservation.start_time)}
                   >
                     Reject
-                  </Button>
+                  </Button></>)}
               </Grid>
               </Grid>
               {updatingReservationId === reservation.reservation_id && (
@@ -409,6 +438,22 @@ const ReservationList = () => {
         })}
       </ul>
     </div>
+    {/* Confirmation Dialog */}
+    <Dialog open={openDialog} onClose={handleCloseDialog}>
+    <DialogTitle>Confirm Action</DialogTitle>
+    <DialogContent>
+      <DialogContentText>
+        Are you sure you want to {actionType} this reservation?
+      </DialogContentText>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={handleCloseDialog}>Cancel</Button>
+      <Button onClick={confirmAction} autoFocus>
+        Confirm
+      </Button>
+    </DialogActions>
+  </Dialog>
+  </>
   );
 };
 
