@@ -21,8 +21,9 @@ const Router = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/grid" element={<MyCalendarComponent />} />
         <Route path="/" element={<NavbarLayout />}>
-          <Route path="/" element={<Demo />} />
           <Route path="/menu" element={<Menu />} />
+          <Route path="/viewReservation" element={<ViewReservation />} />
+          
         </Route>
       </Routes>
     </>
