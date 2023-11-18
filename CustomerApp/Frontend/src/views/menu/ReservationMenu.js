@@ -7,13 +7,16 @@ function MenuReservationApp() {
 
   useEffect(() => {
     // Axios call on page load
-    axios.post('https://3ithnk2mg5.execute-api.us-east-1.amazonaws.com/dev/get-menu', {"restaurant_id": "1"})
-      .then(response => {
+    axios
+      .post('https://3ithnk2mg5.execute-api.us-east-1.amazonaws.com/dev/get-menu', {
+        restaurant_id: '1',
+      })
+      .then((response) => {
         // Assuming the response data is an array of menu items
         setMenuItems(response.data.body.restaurant_food_menu);
         console.log(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error fetching menu items:', error);
       });
   }, []); // The empty dependency array ensures that this effect runs only once on mount
@@ -21,16 +24,10 @@ function MenuReservationApp() {
   const isEntireMenuOffer = menuItems.length > 0 && menuItems[0].menu_offer !== undefined;
 
   const getNonSlashedPrice = (item) => {
-    if (isEntireMenuOffer) {
-      return item.menu_price; // Display regular price when there's an entire menu offer
-    } else {
-      const offer = Number(item.menu_offer);
-      const discount = Number.isNaN(offer) ? 0 : offer; // Ensure offer is a valid number
-
-      return item.menu_offer
-        ? item.menu_price - (item.menu_price * (discount / 100))
-        : item.menu_price; // Display regular price when there's no offer for the item
-    }
+    return {
+      regularPrice: item.menu_price,
+      discountedPrice: Math.round((item.menu_price / 1.1) * 100) / 100, // Display regular price divided by 10%
+    };
   };
 
   const handleQuantityChange = (itemId, newQuantity) => {
@@ -80,41 +77,46 @@ function MenuReservationApp() {
                       component="img"
                       alt={item.menu_category}
                       height="140"
-                      image={item.menu_image} 
+                      image={item.menu_image}
                     />
                     <CardContent>
                       <h5>{item.menu_category}</h5>
                       {isEntireMenuOffer && (
                         <>
                           <p style={{ textDecoration: 'line-through', color: 'gray' }}>
-                            ${item.menu_price}
+                            ${getNonSlashedPrice(item).regularPrice}
                           </p>
                           <p style={{ fontWeight: 'bold', color: 'red' }}>
-                            ${getNonSlashedPrice(item)}
+                            ${getNonSlashedPrice(item).discountedPrice}
                           </p>
                         </>
                       )}
                       {!isEntireMenuOffer && <p>${item.menu_price}</p>}
                       <p>Ingredients: {item.menu_ingrediants}</p>
                       <p>Discount: {item.menu_offer}</p>
-                      <p>Availability: {item.menu_item_availability}</p>
-                      <div className="text-center">
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                        >
-                          -
-                        </Button>
-                        <span style={{ margin: '0 10px' }}>{item.quantity}</span>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                        >
-                          +
-                        </Button>
-                      </div>
+                      <p>
+                        Availability:{' '}
+                        {item.menu_item_availability === 'available' ? 'Available' : 'Unavailable'}
+                      </p>
+                      {item.menu_item_availability === 'available' && (
+                        <div className="text-center">
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                          >
+                            -
+                          </Button>
+                          <span style={{ margin: '0 10px' }}>{item.quantity}</span>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                          >
+                            +
+                          </Button>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </Grid>
@@ -132,4 +134,3 @@ function MenuReservationApp() {
 }
 
 export default MenuReservationApp;
-
