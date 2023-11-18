@@ -16,9 +16,6 @@
 }
 
 .reservation-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: 1rem;
   border: 1px solid #e0e0e0;
   margin-bottom: 1rem;
@@ -57,6 +54,15 @@
 }
 
 .reservation-item button.update:hover {
+  background-color: #45a049;
+}
+
+.reservation-item button.approve {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.reservation-item button.approve:hover {
   background-color: #45a049;
 }
 
