@@ -1,10 +1,12 @@
 import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
+
+import ViewReservation from "./views/Reservation/viewReservation";
+
 import Login from "./auth/login";
 import Signup from "./auth/signup";
 import MyCalendarComponent from "./views/Demo/HolisticView/dayGrid";
 
-import Demo from "./views/Demo";
 import NavbarLayout from "./utils/NavbarLayout";
 import Menu from "./views/Menu";
 
