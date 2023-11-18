@@ -14,5 +14,11 @@
         "firebase-debug.*.log"
       ]
     }
-  ]
+  ],
+  "emulators": {
+    "singleProjectMode": false, // do not warn on detection of multiple project IDs
+    "firestore": {
+      "port": "8084"
+    }
+  }
 }

@@ -2,7 +2,12 @@ const AWS = require("aws-sdk");
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = "restaurants";
-
+const headers = {
+  "Access-Control-Allow-Headers":
+    "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
+  "Access-Control-Allow-Methods": "*",
+  "Access-Control-Allow-Origin": "*",
+};
 module.exports.addFoodMenuItem = async (event) => {
   const requestBody = JSON.parse(event.body);
   const restaurantId = requestBody.restaurant_id;
@@ -55,12 +60,22 @@ module.exports.addFoodMenuItem = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify({ message: "Food menu item added successfully" }),
+      headers: {
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+      },
     };
   } catch (error) {
     console.error("Error adding food menu item:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: "Internal Server Error" }),
+      headers: {
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+      },
     };
   }
 };

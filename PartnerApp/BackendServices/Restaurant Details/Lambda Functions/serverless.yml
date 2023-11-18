@@ -1,4 +1,4 @@
-service: lambda-functions
+service: book-a-bite-serverless-restaurant
 frameworkVersion: "3"
 
 provider:
@@ -11,9 +11,32 @@ provider:
 functions:
   addOperationsDetails:
     handler: addOperationsDetails.addOperationsDetails
+    events:
+      - http:
+          path: /addRestaurantOperations
+          method: POST
+          cors: true
+
   addFoodMenuItem:
     handler: addFoodMenuItem.addFoodMenuItem
+    events:
+      - http:
+          path: /addFoodMenuItem
+          method: POST
+          cors: true
+
   addTableDetails:
     handler: addTableDetails.addTableDetails
+    events:
+      - http:
+          path: /addtables
+          method: POST
+          cors: true
+
   getTotalTables:
     handler: getTotalTables.getTotalTables
+    events:
+      - http:
+          path: /getTotalTables
+          method: GET
+          cors: true
