@@ -90,7 +90,7 @@ const ReservationList = () => {
       // Step 1: Convert date, time and restaurant_id to a timestamp
      // Assuming your time slot format is "HH:MM - HH:MM"
       const [hours, minutes] = selectedSlot.split('-')[0].trim().split(':');
-const timestamp = `${checkDate}T${hours}:${minutes}Z`;
+    const timestamp = `${checkDate}T${hours}:${minutes}Z`;
 
   
       // Step 2: Prepare the updated data
@@ -115,7 +115,24 @@ const timestamp = `${checkDate}T${hours}:${minutes}Z`;
           const result = await response.json();
           if (response.ok) {
               alert('Reservation updated successfully!');
-             
+
+              const updatedReservationData = {
+                email: "riyapatel3126220@gmail.com",
+                reservation_id: updatedData.reservation_id, 
+                no_of_tables: updatedData.no_of_tables,
+                reservation_timestamp: updatedData.reservation_timestamp,
+              };
+      
+              await axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/updateReservation", {
+                body: JSON.stringify(updatedReservationData),
+              })
+              .then((res) => {
+                console.log('Response:', res.data);
+              })
+              .catch((err) => {
+                console.error('Error:', err.response ? err.response.data : err.message);
+              });
+
           } else {
               alert('Failed to update reservation: ' + (result.error || 'Unknown error'));
           }
@@ -184,6 +201,21 @@ const deleteReservation = async (reservationId) => {
 
         if (response.status === 200) {
             alert('Reservation deleted successfully!');
+    
+            const deleteReservationData = {
+                email: "riyapatel3126220@gmail.com",
+                reservation_id: reservationId, 
+              };
+      
+              await axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/deleteReservation", {
+                body: JSON.stringify(deleteReservationData),
+              })
+              .then((res) => {
+                console.log('Response:', res.data);
+              })
+              .catch((err) => {
+                console.error('Error:', err.response ? err.response.data : err.message);
+              });
             // You may want to update your state to reflect that the reservation is deleted.
             setReservations(reservations.filter(res => res.reservation_id !== reservationId));
         } else {

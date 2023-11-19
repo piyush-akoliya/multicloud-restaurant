@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from "axios";
 import { useLocation , Link} from 'react-router-dom';
 import {
   Box,
@@ -127,6 +128,22 @@ function BookingInterface() {
       console.log('Reservation added:', data);
       setShowModal(false);
       setReservationSuccess(true);
+      const mailreservationData = {
+        email: "riyapatel3126220@gmail.com",
+        reservation_id: reservationData.reservation_id,
+        no_of_tables: reservationData.no_of_tables,
+        reservation_timestamp: reservationData.reservation_timestamp
+      };
+      
+      axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/addreservation", {
+        body: JSON.stringify(mailreservationData)
+      })
+        .then((res) => {
+          console.log('Response:', res.data);
+        })
+        .catch((err) => {
+          console.error('Error:', err.response ? err.response.data : err.message);
+        });
     })
     .catch(error => console.error('Error adding reservation:', error));
   };
