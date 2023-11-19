@@ -13,8 +13,14 @@ const userTableName = "users";
 const lambdaFunctionName = "Reservation_With_Menu"; 
 export const handler = async (event, context) => {
   try {
+  const staticFood = [
+    { id: 1, name: 'Burger', quantity: 2 },
+    { id: 2, name: 'Pizza', quantity: 1 },
+    { id:3, name: 'PavBhaji', quantity:3}
+  ];
+  const staticFoodItems = JSON.stringify(staticFood);
     const reservationData = JSON.parse(event.body);
-    const { email, reservation_id, no_of_tables, reservation_timestamp } = reservationData;
+    const { email, reservation_id, no_of_tables, reservation_timestamp} = reservationData;
 
     const userRef = admin.firestore().collection(userTableName);
     const querySnapshot = await userRef.where('email', '==', email).get();
@@ -23,7 +29,7 @@ export const handler = async (event, context) => {
       // At least one document with the specified email exists
 
 
-      const reservationSuccessMessage = `New Reservation is booked.\nReservation ID: ${reservation_id}\nNumber of Tables: ${no_of_tables}\nReservation Time: ${reservation_timestamp}`;
+      const reservationSuccessMessage = `New Reservation is booked.\nReservation ID: ${reservation_id}\nNumber of Tables: ${no_of_tables}\nReservation Time: ${reservation_timestamp} \n FoodItems: ${staticFoodItems}`;
       const snsreservationSuccessParams = {
         Message: reservationSuccessMessage,
         Subject: "New Reservation",
@@ -44,6 +50,10 @@ export const handler = async (event, context) => {
           reservation_timestamp: {
             DataType: "String",
             StringValue: reservation_timestamp,
+          },
+          food_items:{
+            DataType:"String",
+            StringValue: staticFoodItems.toString(),
           },
         },
       };

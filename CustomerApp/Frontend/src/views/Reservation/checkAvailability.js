@@ -47,10 +47,6 @@ function BookingInterface() {
   const date = location.state?.date || localStorage.getItem('checkAvailability_date');
   const [reservationSuccess, setReservationSuccess] = useState(false); 
 
-  const foodItems = [
-    { id: 1, quantity: 1 },
-    { id: 2, quantity: 2 },
-  ];
   const formatTime = (time) => {
     const hours = Math.floor(time / 100);
     const minutes = time % 100;
@@ -132,7 +128,7 @@ function BookingInterface() {
         email: "riyapatel3126220@gmail.com",
         reservation_id: reservationData.reservation_id,
         no_of_tables: reservationData.no_of_tables,
-        reservation_timestamp: reservationData.reservation_timestamp
+        reservation_timestamp: reservationData.reservation_timestamp,
       };
       
       axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/addreservation", {
