@@ -23,7 +23,7 @@ function MyCalendarComponent({ restaurantId }) {
   useEffect(() => {
 
     const resIDStr=localStorage.getItem('restaurant_id');
-        
+        console.log(resIDStr)
         const resID = parseInt(resIDStr); 
         const typeOfResID = typeof resID;
 console.log(typeOfResID);

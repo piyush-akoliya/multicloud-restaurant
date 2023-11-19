@@ -180,7 +180,7 @@ const restaurantId = generateReservationId();
         showToast("Registration completed", "success");
 
         localStorage.setItem("userData", JSON.stringify(userData));
-        navigate("/restaurantList");
+        navigate("/RestaurantAvailabilityForm");
       })
       .catch((error) => {
         console.error("Error storing user information:", error.message);

@@ -92,7 +92,7 @@ function Login() {
             console.log("res"+(data.restaurantId))
             localStorage.setItem('restaurant_id', JSON.stringify(data.restaurantId));
             console.log(localStorage.getItem('userData'))
-            navigate('/restaurantList');
+            navigate('/RestaurantAvailabilityForm');
       })
       .catch((error) => {
         console.error('API request error:', error);
