@@ -12,6 +12,7 @@ import RestaurantAvailabilityForm from "./views/Demo/Restaurant Details/Restaura
 import TableDetails from "./views/Demo/Restaurant Details/TableDetails";
 import ReservationCancellation from "./views/Demo/Restaurant Details/ReservationCancellation";
 import AddMenuItemForm from "./views/Demo/Restaurant Details/AddMenuItemForm";
+import Menu from "./views/Menu/index";
 const Router = () => {
   const location = useLocation();
 
