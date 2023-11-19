@@ -2,6 +2,7 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     args:
       - "build"
+      - "--memory=4g" # Set the memory limit for Docker build to 4GB
       - "-t"
       - "us-east1-docker.pkg.dev/serverless-402501/book-a-bite-partner-app/book-a-bite-partner-app"
       - "./PartnerApp/Frontend"
@@ -22,4 +23,3 @@ steps:
           --allow-unauthenticated
 images:
   - "us-east1-docker.pkg.dev/serverless-402501/book-a-bite-partner-app/book-a-bite-partner-app"
-#cicd for application
