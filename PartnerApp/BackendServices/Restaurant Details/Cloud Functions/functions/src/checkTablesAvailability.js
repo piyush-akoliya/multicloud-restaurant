@@ -1,8 +1,9 @@
-const AWS = require("aws-sdk");
-const dynamoDB = new AWS.DynamoDB.DocumentClient();
+const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 const cors = require("cors");
 const functionsCloud = require("@google-cloud/functions-framework");
+
+const db = admin.firestore();
 
 const checkTablesAvailability = functions.https.onRequest(async (req, res) => {
   // Parse the request body
@@ -10,25 +11,20 @@ const checkTablesAvailability = functions.https.onRequest(async (req, res) => {
   const { numberOfTables, hour, restaurantId, date } = requestBody;
 
   // Calculate the reservation timestamp based on the provided date and hour
-  const reservationTimestamp = `${date}T${hour}:00:00Z`;
+  const reservationTimestamp = new Date(`${date}T${hour}:00:00Z`);
 
-  // Query the database to count reservations for the specified date, hour, and restaurant
-  const params = {
-    TableName: "reservation",
-    IndexName: "restaurantId-reservationTimestamp-index",
-    KeyConditionExpression:
-      "restaurant_id = :id and reservation_timestamp = :timestamp",
-    ExpressionAttributeValues: {
-      ":id": restaurantId,
-      ":timestamp": reservationTimestamp,
-    },
-  };
+  // Reference to the reservations collection in Firestore
+  const reservationsRef = db.collection("reservations");
 
   try {
-    const result = await dynamoDB.query(params).promise();
+    // Query the reservations collection for the specified date, hour, and restaurant
+    const result = await reservationsRef
+      .where("restaurantId", "==", restaurantId)
+      .where("reservationTimestamp", "==", reservationTimestamp)
+      .get();
 
     // Calculate the number of available tables
-    const availableTables = numberOfTables - result.Count;
+    const availableTables = numberOfTables - result.size;
 
     // Determine if the tables are full or not
     const isFull = availableTables <= 0;

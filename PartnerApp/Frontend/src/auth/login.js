@@ -79,7 +79,11 @@ function Login() {
   const makeAPIRequest = (email) => {
     const apiUrl = 'https://aqs85q6n1m.execute-api.us-east-1.amazonaws.com/prod/get-role-restaurant';
     const requestBody = { email };
-
+    axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/newRestaurantsignup", {
+  body: JSON.stringify({
+    email: email
+  })
+}).then((res)=>console.log(res)).catch((err)=>console.log(err));
     axios
       .post(apiUrl, requestBody)
       .then((response) => {

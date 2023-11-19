@@ -19,6 +19,25 @@ const ReservationList = () => {
     const [availableSlots, setAvailableSlots] = useState([]);
     const [selectedSlot, setSelectedSlot] = useState(null);
     const [updatingReservationId, setUpdatingReservationId] = useState(null);
+    const [restaurantEmails, setRestaurantEmails] = useState({});
+
+    const fetchRestaurantEmail = async (restaurantId) => {
+        try {
+            const response = await axios.get('https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/getRestaurantEmail', {
+                restaurantId: restaurantId
+            });
+
+            if (response.data && response.data.email) {
+                const { email } = response.data;
+                setRestaurantEmails(prevState => ({
+                    ...prevState,
+                    [restaurantId]: email
+                }));
+            }
+        } catch (error) {
+            console.error(`Error fetching email for restaurant ID ${restaurantId}:`, error);
+        }
+    };
 
     const fetchAvailableSlots = async (restaurantId) => {
         const JsonBody= JSON.stringify({
@@ -69,6 +88,7 @@ const ReservationList = () => {
         console.log("updateReservation called with:", reservation);
         setUpdatingReservationId(reservation.reservation_id);
         setCheckDate(""); // Reset the date input when opening the modal
+        fetchRestaurantEmail(reservation.restaurant_id);
     };
 
     const handleSlotChange = (event) => {
@@ -90,7 +110,7 @@ const ReservationList = () => {
       // Step 1: Convert date, time and restaurant_id to a timestamp
      // Assuming your time slot format is "HH:MM - HH:MM"
       const [hours, minutes] = selectedSlot.split('-')[0].trim().split(':');
-const timestamp = `${checkDate}T${hours}:${minutes}Z`;
+    const timestamp = `${checkDate}T${hours}:${minutes}Z`;
 
   
       // Step 2: Prepare the updated data
@@ -115,7 +135,24 @@ const timestamp = `${checkDate}T${hours}:${minutes}Z`;
           const result = await response.json();
           if (response.ok) {
               alert('Reservation updated successfully!');
-             
+
+              const updatedReservationData = {
+                email: restaurantEmails,
+                reservation_id: updatedData.reservation_id, 
+                no_of_tables: updatedData.no_of_tables,
+                reservation_timestamp: updatedData.reservation_timestamp,
+              };
+      
+              await axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/updateReservation", {
+                body: JSON.stringify(updatedReservationData),
+              })
+              .then((res) => {
+                console.log('Response:', res.data);
+              })
+              .catch((err) => {
+                console.error('Error:', err.response ? err.response.data : err.message);
+              });
+
           } else {
               alert('Failed to update reservation: ' + (result.error || 'Unknown error'));
           }
@@ -171,10 +208,12 @@ const timestamp = `${checkDate}T${hours}:${minutes}Z`;
     // 3600000 milliseconds = 1 hour
     return reservationTime - now > 3600000;
 };
-const deleteReservation = async (reservationId) => {
+const deleteReservation = async (reservationId,restaurantId) => {
     console.log(`Deleting reservation with ID: ${reservationId}`);
     try {
+        fetchRestaurantEmail(restaurantId);
         const response = await axios({
+            
             method: 'DELETE',
             url: `https://us-central1-serverless-402614.cloudfunctions.net/deleteReservation`,
             data: {
@@ -184,6 +223,21 @@ const deleteReservation = async (reservationId) => {
 
         if (response.status === 200) {
             alert('Reservation deleted successfully!');
+    
+            const deleteReservationData = {
+                email: restaurantEmails,
+                reservation_id: reservationId, 
+              };
+      
+              await axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/deleteReservation", {
+                body: JSON.stringify(deleteReservationData),
+              })
+              .then((res) => {
+                console.log('Response:', res.data);
+              })
+              .catch((err) => {
+                console.error('Error:', err.response ? err.response.data : err.message);
+              });
             // You may want to update your state to reflect that the reservation is deleted.
             setReservations(reservations.filter(res => res.reservation_id !== reservationId));
         } else {
