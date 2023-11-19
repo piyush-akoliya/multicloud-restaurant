@@ -63,6 +63,11 @@ function Signup() {
         showToast("Registration successful", "success");
         setStep(2);
       })
+      .then(()=>{
+        axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/newRestaurantsignup",{
+          email:email
+        })
+      })
       .catch((error) => {
         console.log(error);
         console.error("Registration error:", error.message);
@@ -81,6 +86,7 @@ function Signup() {
         setEmail(user.email);
         showToast("Google signup successful", "success");
         setStep(2);
+   
       })
       .catch((error) => {
         console.log(error);
