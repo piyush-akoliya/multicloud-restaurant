@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from "axios";
 import { useLocation , Link} from 'react-router-dom';
 import {
   Box,
@@ -45,11 +46,29 @@ function BookingInterface() {
   const restaurant = location.state?.restaurant || JSON.parse(localStorage.getItem('checkAvailability_restaurant'));
   const date = location.state?.date || localStorage.getItem('checkAvailability_date');
   const [reservationSuccess, setReservationSuccess] = useState(false); 
+  const [restaurantEmail, setRestaurantEmail] = useState('');
 
-  const foodItems = [
-    { id: 1, quantity: 1 },
-    { id: 2, quantity: 2 },
-  ];
+  useEffect(() => {
+    fetchRestaurantEmail();
+  }, []);
+
+  const fetchRestaurantEmail = () => {
+    const restaurantId = restaurant.restaurant_id;
+    
+    axios.get('https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/getRestaurantEmail', {
+      restaurantId: restaurantId
+    })
+    .then(response => {
+      const { email } = response.data;
+      console.log(response.data);
+      setRestaurantEmail(email);
+    })
+    .catch(error => {
+      console.error('Error fetching restaurant email:', error);
+    });
+  };
+
+
   const formatTime = (time) => {
     const hours = Math.floor(time / 100);
     const minutes = time % 100;
@@ -127,6 +146,22 @@ function BookingInterface() {
       console.log('Reservation added:', data);
       setShowModal(false);
       setReservationSuccess(true);
+      const mailreservationData = {
+        email: restaurantEmail,
+        reservation_id: reservationData.reservation_id,
+        no_of_tables: reservationData.no_of_tables,
+        reservation_timestamp: reservationData.reservation_timestamp,
+      };
+      
+      axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/addreservation", {
+        body: JSON.stringify(mailreservationData)
+      })
+        .then((res) => {
+          console.log('Response:', res.data);
+        })
+        .catch((err) => {
+          console.error('Error:', err.response ? err.response.data : err.message);
+        });
     })
     .catch(error => console.error('Error adding reservation:', error));
   };
