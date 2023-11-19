@@ -19,6 +19,25 @@ const ReservationList = () => {
     const [availableSlots, setAvailableSlots] = useState([]);
     const [selectedSlot, setSelectedSlot] = useState(null);
     const [updatingReservationId, setUpdatingReservationId] = useState(null);
+    const [restaurantEmails, setRestaurantEmails] = useState({});
+
+    const fetchRestaurantEmail = async (restaurantId) => {
+        try {
+            const response = await axios.get('https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/getRestaurantEmail', {
+                restaurantId: restaurantId
+            });
+
+            if (response.data && response.data.email) {
+                const { email } = response.data;
+                setRestaurantEmails(prevState => ({
+                    ...prevState,
+                    [restaurantId]: email
+                }));
+            }
+        } catch (error) {
+            console.error(`Error fetching email for restaurant ID ${restaurantId}:`, error);
+        }
+    };
 
     const fetchAvailableSlots = async (restaurantId) => {
         const JsonBody= JSON.stringify({
@@ -69,6 +88,7 @@ const ReservationList = () => {
         console.log("updateReservation called with:", reservation);
         setUpdatingReservationId(reservation.reservation_id);
         setCheckDate(""); // Reset the date input when opening the modal
+        fetchRestaurantEmail(reservation.restaurant_id);
     };
 
     const handleSlotChange = (event) => {
@@ -117,7 +137,7 @@ const ReservationList = () => {
               alert('Reservation updated successfully!');
 
               const updatedReservationData = {
-                email: "riyapatel3126220@gmail.com",
+                email: restaurantEmails,
                 reservation_id: updatedData.reservation_id, 
                 no_of_tables: updatedData.no_of_tables,
                 reservation_timestamp: updatedData.reservation_timestamp,
@@ -188,10 +208,12 @@ const ReservationList = () => {
     // 3600000 milliseconds = 1 hour
     return reservationTime - now > 3600000;
 };
-const deleteReservation = async (reservationId) => {
+const deleteReservation = async (reservationId,restaurantId) => {
     console.log(`Deleting reservation with ID: ${reservationId}`);
     try {
+        fetchRestaurantEmail(restaurantId);
         const response = await axios({
+            
             method: 'DELETE',
             url: `https://us-central1-serverless-402614.cloudfunctions.net/deleteReservation`,
             data: {
@@ -203,7 +225,7 @@ const deleteReservation = async (reservationId) => {
             alert('Reservation deleted successfully!');
     
             const deleteReservationData = {
-                email: "riyapatel3126220@gmail.com",
+                email: restaurantEmails,
                 reservation_id: reservationId, 
               };
       
