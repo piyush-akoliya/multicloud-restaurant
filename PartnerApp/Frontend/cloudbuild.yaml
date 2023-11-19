@@ -19,6 +19,8 @@ steps:
           --image=us-east1-docker.pkg.dev/serverless-402501/book-a-bite-partner-app/book-a-bite-partner-app \
           --region=us-east1 \
           --platform=managed \
-          --allow-unauthenticated
+          --allow-unauthenticated \
+          --memory=2Gi \
+          --cpu=2
 images:
   - "us-east1-docker.pkg.dev/serverless-402501/book-a-bite-partner-app/book-a-bite-partner-app"
