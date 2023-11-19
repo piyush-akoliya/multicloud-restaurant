@@ -14,7 +14,9 @@ const userTableName = "users";
 
 export const handler = async (event, context) => {
   try {
-    const { email } = JSON.parse(event.body);
+    const reservationData = JSON.parse(event.body);
+    const { email, reservation_id, no_of_tables, reservation_timestamp } = reservationData;
+    
     const userRef = admin.firestore().collection(userTableName);
     const querySnapshot = await userRef.where('email', '==', email).get();
 
@@ -22,7 +24,7 @@ export const handler = async (event, context) => {
     // At least one document with the specified email exists
     querySnapshot.forEach((doc) => {
     });
-    const modifyreservationSuccessMessage = `Reservation modified!`;
+    const modifyreservationSuccessMessage = `Reservation modified! \nReservation ID: ${reservation_id}\nNumber of Tables: ${no_of_tables}\nReservation Time: ${reservation_timestamp}`;
       const snsmodifyreservationSuccessParams = {
         Message: modifyreservationSuccessMessage,
         Subject: "Reservation update",
@@ -31,6 +33,18 @@ export const handler = async (event, context) => {
           email: {
             DataType: "String",
             StringValue: email,
+          },
+          reservation_id: {
+            DataType: "String",
+            StringValue: reservation_id.toString(),
+          },
+          no_of_tables: {
+            DataType: "String",
+            StringValue: no_of_tables.toString(),
+          },
+          reservation_timestamp: {
+            DataType: "String",
+            StringValue: reservation_timestamp,
           },
         },
       };
