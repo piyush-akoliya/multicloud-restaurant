@@ -40,6 +40,10 @@ functions:
           path: /getTotalTables
           method: GET
           cors: true
+          request:
+            parameters:
+              querystrings:
+                restaurantId: true
 resources:
   Resources:
     MyS3BucketPiyush:

@@ -26,7 +26,7 @@ const Router = () => {
         <Route path="/" element={<NavbarLayout />}>
           <Route path="/menu" element={<Menu />} />
           <Route path="/viewReservation" element={<ViewReservation />} />
-          <Route path="/" element={<AddMenuItemForm />} />
+          <Route path="/AddMenuItemForm" element={<AddMenuItemForm />} />
           <Route
             path="/ReservationCancellation"
             element={<ReservationCancellation />}

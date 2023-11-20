@@ -9,6 +9,18 @@ const ReservationCancellation = () => {
   const handleCancelReservation = () => {
     // Check if both description and date are provided
     if (description && selectedDate) {
+      // Get the current time in the format HH:mm:ss
+      const currentTime = new Date().toLocaleTimeString("en-US", {
+        hour12: false,
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        timeZone: "UTC",
+      });
+
+      // Combine the selected date with the current time
+      const timestamp = `${selectedDate}T${currentTime}Z`;
+
       // Make a POST request to the API endpoint
       fetch(apiUrl, {
         method: "POST",
@@ -18,7 +30,7 @@ const ReservationCancellation = () => {
         body: JSON.stringify({
           restaurantId: 2, // Static restaurantId
           description,
-          date: selectedDate,
+          date: timestamp,
           reservation_status: "Cancelled", // Static reservation_status
         }),
       })
