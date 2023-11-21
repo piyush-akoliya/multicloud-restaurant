@@ -4,7 +4,7 @@ const ReservationCancellation = () => {
   const [description, setDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const apiUrl =
-    "https://us-central1-serverless-402501.cloudfunctions.net/updateReservationDescription"; // Replace with your actual API endpoint
+    "https://us-central1-serverless-402501.cloudfunctions.net/updateReservationDescription";
 
   const handleCancelReservation = () => {
     // Check if both description and date are provided

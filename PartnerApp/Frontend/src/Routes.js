@@ -13,6 +13,7 @@ import TableDetails from "./views/Demo/Restaurant Details/TableDetails";
 import ReservationCancellation from "./views/Demo/Restaurant Details/ReservationCancellation";
 import AddMenuItemForm from "./views/Demo/Restaurant Details/AddMenuItemForm";
 import Menu from "./views/Menu/index";
+import RestaurantView from "./views/Demo/Restaurant Details/RestaurantView";
 const Router = () => {
   const location = useLocation();
 
@@ -25,6 +26,7 @@ const Router = () => {
         <Route path="/grid" element={<MyCalendarComponent />} />
         <Route path="/" element={<NavbarLayout />}>
           <Route path="/menu" element={<Menu />} />
+          <Route path="/restaurantView" element={<RestaurantView />} />
           <Route path="/viewReservation" element={<ViewReservation />} />
           <Route path="/AddMenuItemForm" element={<AddMenuItemForm />} />
           <Route
