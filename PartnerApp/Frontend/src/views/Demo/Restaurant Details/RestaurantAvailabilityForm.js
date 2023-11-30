@@ -143,8 +143,9 @@ const RestaurantAvailabilityForm = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* Button to post availabilities */}
-        <button onClick={postAvailabilities}>Post Availabilities</button>
+        <button id="post-availability" onClick={postAvailabilities}>
+          Post Availabilities
+        </button>
       </div>
     </div>
   );
