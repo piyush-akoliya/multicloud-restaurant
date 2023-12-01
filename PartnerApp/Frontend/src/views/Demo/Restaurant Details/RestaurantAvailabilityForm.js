@@ -10,8 +10,9 @@ import Paper from "@mui/material/Paper";
 import axios from "axios";
 
 const RestaurantAvailabilityForm = () => {
+  const restaurantId = localStorage.getItem("restaurant_id");
   const [restaurantDetails, setRestaurantDetails] = useState({
-    restaurant_id: "2",
+    restaurant_id: restaurantId,
     restaurant_operation_details: [
       { day: "Sunday", opening_time: "", closing_time: "" },
       { day: "Monday", opening_time: "", closing_time: "" },
@@ -73,7 +74,7 @@ const RestaurantAvailabilityForm = () => {
       console.log("the object going is ::");
       console.log(restaurantDetails);
       const response = await axios.post(
-        "https://ks1pq2xfal.execute-api.us-east-1.amazonaws.com/dev/addRestaurantOperations",
+        "https://oblbtb4rq7.execute-api.us-east-1.amazonaws.com/dev/addRestaurantOperations",
         restaurantDetails
       );
 

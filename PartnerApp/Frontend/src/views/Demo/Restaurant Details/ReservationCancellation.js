@@ -3,8 +3,9 @@ import React, { useState } from "react";
 const ReservationCancellation = () => {
   const [description, setDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
+  const restaurantId = localStorage.getItem("restaurant_id");
   const apiUrl =
-    "https://us-central1-serverless-402501.cloudfunctions.net/updateReservationDescription";
+    "https://us-central1-serverless-project-402603.cloudfunctions.net/updateReservationDescription";
 
   const handleCancelReservation = () => {
     // Check if both description and date are provided
@@ -28,7 +29,7 @@ const ReservationCancellation = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          restaurantId: 2, // Static restaurantId
+          restaurantId: restaurantId, // Static restaurantId
           description,
           date: timestamp,
           reservation_status: "Cancelled", // Static reservation_status
