@@ -10,7 +10,7 @@ import Paper from "@mui/material/Paper";
 import axios from "axios";
 
 const RestaurantAvailabilityForm = () => {
-  const restaurantId = localStorage.getItem("restaurant_id");
+  const restaurantId = localStorage.getItem("restaurantId");
   const [restaurantDetails, setRestaurantDetails] = useState({
     restaurant_id: restaurantId,
     restaurant_operation_details: [
@@ -25,6 +25,7 @@ const RestaurantAvailabilityForm = () => {
   });
 
   useEffect(() => {
+    console.log("Here it is ::" + localStorage.getItem("restaurantId"));
     // Fetch previously submitted values from the database
     const fetchPreviousAvailabilities = async () => {
       try {
