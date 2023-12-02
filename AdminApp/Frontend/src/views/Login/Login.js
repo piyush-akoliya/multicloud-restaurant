@@ -3,6 +3,9 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.png';
+import auth from './firebase';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -10,15 +13,21 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (email === 'admin@gmail.com' && password === 'admin123') {
+  const handleLogin = async () => {
+    try {
+        console.log('Email:', email);
+        console.log('Password:', password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
       toast.success('Login successful');
       navigate('/home');
-      console.log('Login successful');
-    } else {
+      console.log('Login successful', user);
+    } catch (error) {
       setError('Invalid email or password');
+      console.error('Error during login:', error);
     }
   };
+  
 
   const backgroundStyle = {
     backgroundImage: `url('https://img.freepik.com/free-psd/chalk-italian-food-isolated_23-2150788278.jpg?w=996&t=st=1698215694~exp=1698216294~hmac=31539d2ddf91d9c22704fd02eb0c9790c7a24e572996145992c17ee604ef320f')`,
