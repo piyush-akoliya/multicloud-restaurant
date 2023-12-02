@@ -1,3 +1,5 @@
+-- SQL query to retrieve the top 10 restaurants with the most orders
+
 SELECT
   JSON_EXTRACT_SCALAR(data, '$.restaurant_name') AS Restaurant_Name,
   COUNT(*) AS Order_Count
