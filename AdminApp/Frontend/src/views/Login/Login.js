@@ -3,8 +3,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.png';
-import auth from './firebase';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import {auth} from './firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 
 const Login = () => {
@@ -17,13 +17,16 @@ const Login = () => {
     try {
         console.log('Email:', email);
         console.log('Password:', password);
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+       
+       const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log(userCredential);
       const user = userCredential.user;
       toast.success('Login successful');
-      navigate('/home');
-      console.log('Login successful', user);
+      navigate("/home")
+
     } catch (error) {
       setError('Invalid email or password');
+      toast.error('Login unsuccessful')
       console.error('Error during login:', error);
     }
   };
