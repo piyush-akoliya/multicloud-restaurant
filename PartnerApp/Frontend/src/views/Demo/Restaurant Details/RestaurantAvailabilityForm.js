@@ -14,7 +14,8 @@ const RestaurantAvailabilityForm = () => {
   const navigate = useNavigate();
   const restaurantId = localStorage.getItem("restaurantId");
   const [restaurantDetails, setRestaurantDetails] = useState({
-    restaurant_id: "1",
+    // restaurant_id: "1",
+    restaurant_id: restaurantId,
     restaurant_operation_details: [
       { day: "Sunday", opening_time: "", closing_time: "" },
       { day: "Monday", opening_time: "", closing_time: "" },

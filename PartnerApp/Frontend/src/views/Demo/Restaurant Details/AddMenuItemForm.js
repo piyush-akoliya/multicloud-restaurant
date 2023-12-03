@@ -25,7 +25,8 @@ const AddMenuItemForm = () => {
 
       // Create a JSON object to send
       const data = {
-        restaurant_id: "2", // Using a static restaurant ID
+        // restaurant_id: "2", // Using a static restaurant ID
+        restaurant_id: restaurantId,
         food_menu_item: {
           menu_category: menuCategory,
           menu_ingrediants: menuIngredients,

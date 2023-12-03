@@ -6,8 +6,8 @@ const TableDetails = () => {
   const [numTables, setNumTables] = useState(0);
   const [tableSize, setTableSize] = useState(2);
   const [tableDetails, setTableDetails] = useState([]);
-  // const restaurantId = localStorage.getItem("restaurant_id");
-  const restaurantId = "1";
+  const restaurantId = localStorage.getItem("restaurant_id");
+  // const restaurantId = "1";
   useEffect(() => {
     // Fetch table details from the API when the component mounts
     const fetchData = async () => {

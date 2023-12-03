@@ -30,7 +30,7 @@ const ReservationCancellation = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          restaurantId: restaurantId, // Static restaurantId
+          restaurantId: restaurantId,
           description,
           date: timestamp,
           reservation_status: "Cancelled", // Static reservation_status
