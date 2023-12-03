@@ -40,12 +40,16 @@ functions:
           path: /getTotalTables
           method: GET
           cors: true
+          request:
+            parameters:
+              querystrings:
+                restaurantId: true
 resources:
   Resources:
     MyS3BucketPiyush:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: serverless-restaurant-b00920744
+        BucketName: serverless-restaurant-menu-images
         PublicAccessBlockConfiguration:
           BlockPublicAcls: false
           BlockPublicPolicy: false

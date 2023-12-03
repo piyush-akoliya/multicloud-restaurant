@@ -9,9 +9,9 @@ const headers = {
   "Access-Control-Allow-Origin": "*",
 };
 module.exports.getTotalTables = async (event) => {
-  const restaurantId = event.pathParameters.restaurantId;
+  const restaurantId = event.queryStringParameters.restaurantId;
   // const restaurantId = requestBody.restaurantId;
-
+  console.log(event.queryStringParameters);
   if (!restaurantId) {
     console.error("Invalid input. restaurantId is required.");
     return {
