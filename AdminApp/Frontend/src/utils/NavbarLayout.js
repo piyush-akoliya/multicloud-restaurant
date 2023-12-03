@@ -73,6 +73,14 @@ export default function NavbarLayout(props) {
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
+  React.useEffect(() => {
+    const user = localStorage.getItem("user"); // Assuming 'user' is the key where user info is stored
+    if (!user) {
+      localStorage.clear();
+      navigate("/login");
+    }
+  }, [navigate]);
+
   return (
     <>
       <Box sx={{ display: "flex" }}>
