@@ -1,9 +1,14 @@
 import React from 'react';
-
+import "./style.css";
 const TopTenPeriodReport = () => {
   return (
-    <div>
-      <h1>Top 10 Period Report</h1>
+    <div className="App">
+    <h2>
+        <br></br>
+        <br></br>
+        <br></br>
+    </h2>
+  <header className="TopRestaurants-header">
       <iframe
       width="1000"
       height="1000"
@@ -13,6 +18,7 @@ const TopTenPeriodReport = () => {
       style={{ border: 0 }}
       allowFullScreen
     ></iframe>
+    </header>
      </div>
   );
 };
