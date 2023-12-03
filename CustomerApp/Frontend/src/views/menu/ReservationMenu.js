@@ -15,6 +15,7 @@ function MenuReservationApp() {
       .post('https://prb29cpvt2.execute-api.us-east-1.amazonaws.com/dev/get-menu', {
         restaurant_id: reservationData["restaurant_id"],
       })
+
       .then((response) => {
         // Assuming the response data is an array of menu items
         setMenuItems(response.data.body.restaurant_food_menu);
