@@ -5,6 +5,7 @@ import Home from "./views/Home";
 import Login from "./views/Login/Login";
 import Reviews from "./views/Reviews";
 import Customers from "./views/Customers";
+import TopRestaurants from "./views/Restaurant/TopRestaurants";
 const Router = () => {
   const location = useLocation();
 
@@ -16,6 +17,7 @@ const Router = () => {
           <Route path="/ReviewsDashboard" element={<Reviews />} />
           <Route path="/CustomersDashboard" element={<Customers />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/topRestaurant" element={<TopRestaurants />} />
         </Route>
       </Routes>
     </>
