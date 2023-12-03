@@ -17,9 +17,9 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const tiles = [
-    { title: "Top 10 Restaurants", image: restaurantImage, link: "/home" },
-    { title: "Top 10 Food Items", image: foodItemsImage, link: "/home" },
-    { title: "Top Order Periods", image: orderPeriodsImage, link: "/home" },
+    { title: "Top 10 Restaurants", image: restaurantImage, link: "/topRestaurant" },
+    { title: "Top 10 Food Items", image: foodItemsImage, link: "/fooditems" },
+    { title: "Top Order Periods", image: orderPeriodsImage, link: "/timeperiod" },
     {
       title: "Top 10 Customers",
       image: customersImage,
