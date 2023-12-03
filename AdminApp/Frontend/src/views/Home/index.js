@@ -20,7 +20,11 @@ const Home = () => {
     { title: "Top 10 Restaurants", image: restaurantImage, link: "/home" },
     { title: "Top 10 Food Items", image: foodItemsImage, link: "/home" },
     { title: "Top Order Periods", image: orderPeriodsImage, link: "/home" },
-    { title: "Top 10 Customers", image: customersImage, link: "/home" },
+    {
+      title: "Top 10 Customers",
+      image: customersImage,
+      link: "/CustomersDashboard",
+    },
     {
       title: "Reviews & Rating Dashboard",
       image: reviewsImage,
