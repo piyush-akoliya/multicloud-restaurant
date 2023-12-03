@@ -36,7 +36,8 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const apiBaseUrl =
-  "https://3ithnk2mg5.execute-api.us-east-1.amazonaws.com/dev/";
+  "https://prb29cpvt2.execute-api.us-east-1.amazonaws.com/dev/";
+// "https://3ithnk2mg5.execute-api.us-east-1.amazonaws.com/dev/";
 
 const MenuItemRow = ({
   item,

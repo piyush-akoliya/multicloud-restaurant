@@ -263,13 +263,7 @@ const deleteReservation = async (reservationId,restaurantId) => {
                             <p><strong>Time:</strong> {time}</p>
                             <p><strong>Restaurant:</strong>  {restaurantNames[reservation.restaurant_id] || 'Unknown'}</p>
                             <p><strong>No of tables:</strong> {reservation.no_of_tables}</p>
-                            <ul className="food-list">
-                                {reservation.food_reservation.map((food, index) => (
-                                    <li key={index}>
-                                        Item ID: {food.item_id}, Quantity: {food.quantity}
-                                    </li>
-                                ))}
-                            </ul>
+                            
                             <button 
                               onClick={() => updateReservation(reservation)}
                                  disabled={!canUpdateOrDelete(reservation.reservation_timestamp)}
