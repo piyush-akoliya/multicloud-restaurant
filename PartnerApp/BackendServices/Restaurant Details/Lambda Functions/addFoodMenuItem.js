@@ -3,7 +3,7 @@ const AWS = require("aws-sdk");
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const s3 = new AWS.S3();
 const tableName = "restaurants";
-const bucketName = "serverless-restaurant-b00920744"; // Replace with your S3 bucket name
+const bucketName = "serverless-restaurant-menu-image";
 
 module.exports.addFoodMenuItem = async (event) => {
   console.log(event);
@@ -44,10 +44,8 @@ module.exports.addFoodMenuItem = async (event) => {
     const s3UploadResult = await s3.upload(s3Params).promise();
     const imageUrl = s3UploadResult.Location;
 
-    // Update the newFoodMenuItem with the image URL
     newFoodMenuItem.menu_image = imageUrl;
 
-    // Fetch the existing menu items from DynamoDB
     const getParams = {
       TableName: tableName,
       Key: {

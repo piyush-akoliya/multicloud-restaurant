@@ -25,13 +25,19 @@ const updateReservationDescription = functions.https.onRequest(
       }
 
       // Convert the frontend date string to a Firestore-compatible date string
-      const formattedDate = date.substring(0, 10) + "T12:00:00Z";
+      const formattedDate = new Date(date); // Assuming date is a string in "YYYY-MM-DD" format
+      const startOfDay = new Date(formattedDate);
+      const endOfDay = new Date(formattedDate);
+
+      startOfDay.setHours(0, 0, 0, 0); // Set to the beginning of the day
+      endOfDay.setHours(23, 59, 59, 999); // Set to the end of the day
 
       // Update reservation status and description in Firestore
       const reservationRef = firestore
         .collection("reservation")
         .where("restaurant_id", "==", restaurantId)
-        .where("reservation_timestamp", "==", formattedDate);
+        .where("reservation_timestamp", ">=", startOfDay.toISOString())
+        .where("reservation_timestamp", "<=", endOfDay.toISOString());
 
       const snapshot = await reservationRef.get();
 

@@ -5,7 +5,7 @@ const TableDetails = () => {
   const [numTables, setNumTables] = useState(0);
   const [tableSize, setTableSize] = useState(2);
   const [tableDetails, setTableDetails] = useState([]);
-
+  const restaurantId = localStorage.getItem("restaurant_id");
   useEffect(() => {
     // Fetch table details from the API when the component mounts
     const fetchData = async () => {
@@ -65,7 +65,7 @@ const TableDetails = () => {
   const handlePostData = async () => {
     // Prepare the data object
     const postData = {
-      restaurant_id: "2",
+      restaurant_id: restaurantId,
       table_details: tableDetails.reduce((acc, entry) => {
         acc[entry.numTables] = entry.tableSize;
         return acc;
@@ -75,7 +75,7 @@ const TableDetails = () => {
     console.log(postData);
     // Post the data to a specified URL
     const response = await axios.post(
-      "https://qt2t180kgi.execute-api.us-east-1.amazonaws.com/dev/addtables",
+      "https://oblbtb4rq7.execute-api.us-east-1.amazonaws.com/dev/addtables",
       postData
     );
 
