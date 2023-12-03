@@ -21,17 +21,35 @@ const Home = () => {
     { title: "Top 10 Food Items", image: foodItemsImage, link: "/home" },
     { title: "Top Order Periods", image: orderPeriodsImage, link: "/home" },
     { title: "Top 10 Customers", image: customersImage, link: "/home" },
-    { title: "Restaurant Reviews", image: reviewsImage, link: "/home" },
+    {
+      title: "Reviews & Rating Dashboard",
+      image: reviewsImage,
+      link: "/ReviewsDashboard",
+    },
   ];
 
   const navigate = useNavigate();
 
   return (
-    <Grid container spacing={2} style={{ padding: "20px", marginTop: "10px" }}>
+    <Grid
+      container
+      spacing={2}
+      style={{
+        padding: "20px",
+        marginTop: "10px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       {tiles.map((tile, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
           <Card>
-            <CardActionArea onClick={navigate(tile.link)}>
+            <CardActionArea
+              onClick={() => {
+                navigate(tile.link);
+              }}
+            >
               <CardMedia
                 component="img"
                 height="250"
