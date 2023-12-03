@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import { useLocation , Link} from 'react-router-dom';
+import { useLocation , Link, useNavigate} from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -17,7 +17,9 @@ import {
 } from '@mui/material';
 function BookingInterface() {
 
+  
   const today = new Date().toISOString().split('T')[0];
+  const navigate = useNavigate();
   const handleDateInputChange = (event) => {
     
     const newDate = event.target.value;
@@ -42,10 +44,12 @@ function BookingInterface() {
   const [noOfTables, setNoOfTables] = useState(1);
   const [foodReservation, setFoodReservation] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showMenuModal, setShowMenuModal] = useState(false);
   const location = useLocation();
   const restaurant = location.state?.restaurant || JSON.parse(localStorage.getItem('checkAvailability_restaurant'));
   const date = location.state?.date || localStorage.getItem('checkAvailability_date');
   const [reservationSuccess, setReservationSuccess] = useState(false); 
+  const [reservationIdAdded, setReservationIdAdded] = useState(null);
   const [restaurantEmail, setRestaurantEmail] = useState('');
 
   useEffect(() => {
@@ -119,6 +123,11 @@ function BookingInterface() {
   }
   const user_id= localStorage.getItem('user_id');
   const reservation_id = generateReservationId();
+  const navigateToMenu = () => {
+    const reservationData = {"reservation_id":reservationIdAdded, "restaurant_id":restaurant["restaurant_id"]};
+    navigate('/menureservation', { state: { reservationData } });
+
+  }
   const addReservation = () => {
     const reservationData = {
       "reservation_id": reservation_id,
@@ -146,6 +155,8 @@ function BookingInterface() {
       console.log('Reservation added:', data);
       setShowModal(false);
       setReservationSuccess(true);
+      setShowMenuModal(true);
+      setReservationIdAdded(reservation_id)
       const mailreservationData = {
         email: restaurantEmail,
         reservation_id: reservationData.reservation_id,
@@ -306,6 +317,19 @@ return (
   </DialogActions>
 </Dialog>
 
+<Dialog open={showMenuModal} onClose={() => setShowMenuModal(false)}>
+<DialogTitle>
+Do you want to add Menu Items?
+</DialogTitle>
+<DialogActions>
+    <Button variant="contained" color="primary" onClick={navigateToMenu}>
+      Click here to select Menu
+    </Button>
+    <Button variant="outlined" color="secondary" onClick={() => setShowMenuModal(false)}>
+      Cancel
+    </Button>
+  </DialogActions>
+</Dialog>
   </Box>
 );
 }
