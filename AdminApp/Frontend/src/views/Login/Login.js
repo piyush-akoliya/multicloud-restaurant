@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.png';
 import {auth} from './firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { Button } from '@mui/material';
 
 
 const Login = () => {
@@ -22,7 +23,7 @@ const Login = () => {
       console.log(userCredential);
       const user = userCredential.user;
       toast.success('Login successful');
-      navigate("/home")
+      navigate("/home");
 
     } catch (error) {
       setError('Invalid email or password');
@@ -127,9 +128,9 @@ const Login = () => {
                 style={inputStyle}
               />
             </div>
-            <button style={submitStyle} onClick={handleLogin}>
+            <Button style={submitStyle} onClick={handleLogin}>
               Login
-            </button>
+            </Button>
           </form>
           {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>

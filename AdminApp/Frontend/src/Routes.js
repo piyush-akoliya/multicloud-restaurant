@@ -1,8 +1,9 @@
 import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import NavbarLayout from "./utils/NavbarLayout";
-import Home from "./views/Home";
+import Home from "./views/Home/index";
 import Login from "./views/Login/Login";
+
 import Reviews from "./views/Reviews";
 import Customers from "./views/Customers";
 import TopRestaurants from "./views/Restaurant/TopRestaurants";
