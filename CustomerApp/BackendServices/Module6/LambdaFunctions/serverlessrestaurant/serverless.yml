@@ -13,3 +13,5 @@ functions:
     handler: sendRestaurantOffers.sendRestaurantOffers
   getFoodMenuForRestaurants:
     handler: getFoodMenuForRestaurants.getFoodMenuForRestaurants
+  getListOfRestaurants:
+    handler: getListOfRestaurants.getListOfRestaurants

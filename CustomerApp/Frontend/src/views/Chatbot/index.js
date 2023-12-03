@@ -141,7 +141,7 @@ class App extends Component {
             }}
           >
             {this.state.conversations.map(this.renderResponse)}
-            <div ref={this.messagesEndRef} /> /*{" "}
+            <div ref={this.messagesEndRef} />
           </Box>
           <TextField
             label="Type your message"
