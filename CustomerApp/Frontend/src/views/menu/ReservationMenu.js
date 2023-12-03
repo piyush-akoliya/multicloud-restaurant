@@ -12,7 +12,7 @@ function MenuReservationApp() {
   useEffect(() => {
     // Axios call on page load
     axios
-      .post('https://3ithnk2mg5.execute-api.us-east-1.amazonaws.com/dev/get-menu', {
+      .post('https://prb29cpvt2.execute-api.us-east-1.amazonaws.com/dev/get-menu', {
         restaurant_id: reservationData["restaurant_id"],
       })
       .then((response) => {
