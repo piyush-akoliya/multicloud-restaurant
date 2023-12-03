@@ -319,15 +319,7 @@ const ReservationList = () => {
               <CustomComp data="Time :" value={time} />
               <CustomComp data="Resturant :" value= {restaurantNames[reservation.restaurant_id] || "Unknown"} />
               <CustomComp data="No of tables :" value={reservation.no_of_tables} />
-             
-              
-              <ul className="food-list">
-                {reservation.food_reservation.map((food, index) => (
-                  <li key={index}>
-                    Item ID: {food.item_id}, Quantity: {food.quantity}
-                  </li>
-                ))}
-              </ul>
+        
               </Grid>
               <Grid item xs={5} container alignItems="center" justifyContent="space-evenly">
               <button

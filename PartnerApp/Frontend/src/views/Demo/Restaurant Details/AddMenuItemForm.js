@@ -9,9 +9,9 @@ const AddMenuItemForm = () => {
   const [itemOffer, setItemOffer] = useState("");
   const [itemPrice, setItemPrice] = useState("");
   const [image, setImage] = useState(null);
-
+  const restaurantId = localStorage.getItem("restaurant_id");
   const apiUrl =
-    "https://qt2t180kgi.execute-api.us-east-1.amazonaws.com/dev/addFoodMenuItem";
+    "https://oblbtb4rq7.execute-api.us-east-1.amazonaws.com/dev/addFoodMenuItem";
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,7 +23,7 @@ const AddMenuItemForm = () => {
 
       // Create a JSON object to send
       const data = {
-        restaurant_id: "2", // Using a static restaurant ID
+        restaurant_id: restaurantId, // Using a static restaurant ID
         food_menu_item: {
           menu_category: menuCategory,
           menu_ingrediants: menuIngredients,
