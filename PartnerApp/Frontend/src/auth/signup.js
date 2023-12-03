@@ -63,10 +63,13 @@ function Signup() {
         showToast("Registration successful", "success");
         setStep(2);
       })
-      .then(()=>{
-        axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/newRestaurantsignup",{
-          email:email
-        })
+      .then(() => {
+        axios.post(
+          "https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/newRestaurantsignup",
+          {
+            email: email,
+          }
+        );
       })
       .catch((error) => {
         console.log(error);
@@ -86,7 +89,6 @@ function Signup() {
         setEmail(user.email);
         showToast("Google signup successful", "success");
         setStep(2);
-   
       })
       .catch((error) => {
         console.log(error);
@@ -96,7 +98,7 @@ function Signup() {
   };
 
   const handleCompleteRegistration = async () => {
-    let imageUrl = '';
+    let imageUrl = "";
 
     if (!selectedImage) {
       showToast("Please select an image to upload.", "warning");
@@ -104,11 +106,8 @@ function Signup() {
     }
     try {
       imageUrl = await handleImageUpload(); // This will upload the image and return the URL
-     console.log(imageUrl);
-    } catch (error) {
-      
-    }
-
+      console.log(imageUrl);
+    } catch (error) {}
 
     setNameError("");
     setContactError("");
@@ -131,39 +130,48 @@ function Signup() {
       return;
     }
     const userId = uuidv4();
- // Generate a unique restaurant ID
- const generateReservationId = () => {
-  const timestamp = Date.now(); // current timestamp
-  const randomDigits = Math.floor(Math.random() * 1000); // Generate a random three-digit number
-  return Number(`${timestamp}${randomDigits}`);
-}
-const restaurantId = generateReservationId();
- // Create the restaurant data object to send to the DynamoDB Lambda
- const restaurantData = {
-   restaurant_id: restaurantId,
-   restaurant_name: name,
-   restaurant_location: location, 
-   img_url: imageUrl
- };
- console.log(restaurantData)
- try {
-   // Save restaurant details to DynamoDB via  Lambda (API gateway)
-   const dynamoResponse = await axios.post(
-     "https://aqs85q6n1m.execute-api.us-east-1.amazonaws.com/prod/dynamoUpload",
-     restaurantData,
-     {
-       headers: {
-         'Content-Type': 'application/json'
-       }
-     }
-   );
+    // Generate a unique restaurant ID
+    const generateReservationId = () => {
+      const timestamp = Date.now(); // current timestamp
+      const randomDigits = Math.floor(Math.random() * 1000); // Generate a random three-digit number
+      return Number(`${timestamp}${randomDigits}`);
+    };
+    const restaurantId = generateReservationId();
+    // Create the restaurant data object to send to the DynamoDB Lambda
+    const restaurantData = {
+      restaurant_id: restaurantId,
+      restaurant_name: name,
+      restaurant_location: location,
+      img_url: imageUrl,
+    };
+    console.log(restaurantData);
+    try {
+      // Save restaurant details to DynamoDB via  Lambda (API gateway)
+      const dynamoResponse = await axios.post(
+        "https://aqs85q6n1m.execute-api.us-east-1.amazonaws.com/prod/dynamoUpload",
+        restaurantData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-   console.log("Restaurant information stored to DynamoDB:", dynamoResponse.data);
-   showToast("Registration completed", "success");
- } catch (error) {
-   console.error("Error saving restaurant information to DynamoDB:", error.message);
-   showToast("Error saving restaurant details. Registration not completed.", "error");
- }
+      console.log(
+        "Restaurant information stored to DynamoDB:",
+        dynamoResponse.data
+      );
+      showToast("Registration completed", "success");
+    } catch (error) {
+      console.error(
+        "Error saving restaurant information to DynamoDB:",
+        error.message
+      );
+      showToast(
+        "Error saving restaurant details. Registration not completed.",
+        "error"
+      );
+    }
 
     const userData = {
       name,
@@ -173,7 +181,7 @@ const restaurantId = generateReservationId();
       email,
       imageUrl,
       location,
-      restaurantId
+      restaurantId,
     };
 
     axios
@@ -186,7 +194,7 @@ const restaurantId = generateReservationId();
         showToast("Registration completed", "success");
 
         localStorage.setItem("userData", JSON.stringify(userData));
-        navigate("/RestaurantAvailabilityForm");
+        navigate("/login");
       })
       .catch((error) => {
         console.error("Error storing user information:", error.message);
@@ -198,7 +206,7 @@ const restaurantId = generateReservationId();
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
+      reader.onerror = (error) => reject(error);
     });
   };
 
@@ -210,25 +218,25 @@ const restaurantId = generateReservationId();
 
     try {
       const base64 = await encodeImageFileAsURL(selectedImage);
-      console.log(base64)
+      console.log(base64);
       // Calling Lambda endpoint
       const response = await axios({
-        method: 'post',
-        url: 'https://aqs85q6n1m.execute-api.us-east-1.amazonaws.com/prod/s3uploadlambda', // The  API Gateway endpoint
+        method: "post",
+        url: "https://aqs85q6n1m.execute-api.us-east-1.amazonaws.com/prod/s3uploadlambda", // The  API Gateway endpoint
         data: JSON.stringify({
-          image: base64.split(',')[1], // Remove the data URI prefix
+          image: base64.split(",")[1], // Remove the data URI prefix
           filename: selectedImage.name, // Include the original file name
           contentType: selectedImage.type, // Include the content type of the file
         }),
         headers: {
-          'Content-Type': 'application/json'
-        }
+          "Content-Type": "application/json",
+        },
       });
 
       // The Lambda function should return the URL of the uploaded image
       return response.data.imageUrl; // Make sure this matches the key in the Lambda's response
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error("Error uploading image:", error);
       showToast("Error uploading image.", "error");
     }
   };
@@ -374,30 +382,30 @@ const restaurantId = generateReservationId();
                     helperText={contactError}
                   />
                   <TextField
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  label="Location"
-                  name="location"
-                  value={location} 
-                  onChange={(e) => setLocation(e.target.value)} 
-                  error={Boolean(locationError)} 
-                  helperText={locationError}
-                />
-                <TextField
-                          variant="outlined"
-                          margin="normal"
-                          required
-                          fullWidth
-                          label="Role"
-                          name="role"
-                          value="Restaurant" // Static value set to "Restaurant"
-                          InputProps={{
-                            readOnly: true, // This makes the field read-only
-                            disabled: true, // This disables the field so it can't be interacted with
-                          }}
-                        />
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Location"
+                    name="location"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    error={Boolean(locationError)}
+                    helperText={locationError}
+                  />
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Role"
+                    name="role"
+                    value="Restaurant" // Static value set to "Restaurant"
+                    InputProps={{
+                      readOnly: true, // This makes the field read-only
+                      disabled: true, // This disables the field so it can't be interacted with
+                    }}
+                  />
 
                   <input
                     accept="image/*"
