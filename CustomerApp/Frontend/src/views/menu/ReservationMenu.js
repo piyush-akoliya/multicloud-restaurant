@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Grid, Card, CardContent, CardMedia, Button } from '@mui/material';
 import axios from 'axios';
-
+import { useLocation } from 'react-router-dom';
 function MenuReservationApp() {
+  const userId = (localStorage.getItem('user_id'));
   const [menuItems, setMenuItems] = useState([]);
+
+  const location = useLocation();
+  const reservationData = location.state?.reservationData || {};
 
   useEffect(() => {
     // Axios call on page load
     axios
       .post('https://3ithnk2mg5.execute-api.us-east-1.amazonaws.com/dev/get-menu', {
-        restaurant_id: '1',
+        restaurant_id: reservationData["restaurant_id"],
       })
       .then((response) => {
         // Assuming the response data is an array of menu items
@@ -19,7 +23,7 @@ function MenuReservationApp() {
       .catch((error) => {
         console.error('Error fetching menu items:', error);
       });
-  }, []); // The empty dependency array ensures that this effect runs only once on mount
+  },[] ); // The empty dependency array ensures that this effect runs only once on mount
 
   const isEntireMenuOffer = menuItems.length > 0 && menuItems[0].menu_offer !== undefined;
 
@@ -33,19 +37,53 @@ function MenuReservationApp() {
   const handleQuantityChange = (itemId, newQuantity) => {
     // Ensure newQuantity is a valid number and greater than or equal to 0
     newQuantity = Number.isNaN(newQuantity) || newQuantity < 0 ? 0 : newQuantity;
-
+  
     setMenuItems((prevItems) => {
       const updatedItems = prevItems.map((item) =>
         item.id === itemId ? { ...item, quantity: newQuantity } : item
       );
+  
       return updatedItems;
     });
   };
+  
+  
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     const selectedItems = menuItems.filter((item) => item.quantity > 0);
     console.log('Selected items:', selectedItems);
     // Implement your logic to submit the reservation here
+
+console.log(reservationData["reservation_id"] )
+    // Step 2: Prepare the updated data
+    const updatedData = {
+      id:reservationData["reservation_id"] , // The reservation ID to update
+      food_reservation:selectedItems,
+       // This is hardcoded for now, adjust as needed
+      updated_by: userId,
+      updated_date: new Date().toISOString()
+  };
+
+  // Step 3: Send the updated data to the cloud function
+  try {
+    console.log(JSON.stringify(updatedData))
+      const response = await fetch('https://us-central1-serverless-402614.cloudfunctions.net/updateReservation', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedData)
+      });
+      const result = await response.json();
+      if (response.ok) {
+          alert('Reservation updated successfully!');
+         
+      } else {
+          alert('Failed to update reservation: ' + (result.error || 'Unknown error'));
+      }
+  } catch (error) {
+      alert('Error updating reservation: ' + error.message);
+  }
 
     // Reset quantities after submitting
     setMenuItems((prevItems) =>
@@ -134,3 +172,4 @@ function MenuReservationApp() {
 }
 
 export default MenuReservationApp;
+
