@@ -27,7 +27,7 @@ export default function NavbarLayout(props) {
   const location = useLocation();
 
   let navItems = [];
-  navItems = ["Logout"];
+  navItems = ["Home", "Logout"];
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -43,7 +43,7 @@ export default function NavbarLayout(props) {
         alt=""
         width={200}
         onClick={() => {
-          navigate("/");
+          navigate("/home");
         }}
         style={{ cursor: "pointer" }}
       />
@@ -54,7 +54,12 @@ export default function NavbarLayout(props) {
             <ListItemButton
               sx={{ textAlign: "center" }}
               onClick={() => {
-                navigate("/" + item);
+                if (item == "Login") {
+                  localStorage.clear();
+                  navigate("/Login");
+                } else {
+                  navigate("/" + item);
+                }
               }}
             >
               <ListItemText primary={item} />
@@ -102,7 +107,7 @@ export default function NavbarLayout(props) {
                 alt=""
                 width={200}
                 onClick={() => {
-                  navigate("/");
+                  navigate("/home");
                 }}
                 style={{ cursor: "pointer" }}
               />
@@ -113,7 +118,12 @@ export default function NavbarLayout(props) {
                   key={item}
                   // sx={{ color: "#fff" }}
                   onClick={() => {
-                    navigate("/" + item);
+                    if (item == "Login") {
+                      localStorage.clear();
+                      navigate("/Login");
+                    } else {
+                      navigate("/" + item);
+                    }
                   }}
                 >
                   {item}
