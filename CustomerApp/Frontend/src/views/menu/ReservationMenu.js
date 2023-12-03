@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Container, Grid, Card, CardContent, CardMedia, Button } from '@mui/material';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+
 function MenuReservationApp() {
-  const userId = (localStorage.getItem('user_id'));
+  const userId = localStorage.getItem('user_id');
   const [menuItems, setMenuItems] = useState([]);
 
   const location = useLocation();
@@ -13,9 +14,8 @@ function MenuReservationApp() {
     // Axios call on page load
     axios
       .post('https://prb29cpvt2.execute-api.us-east-1.amazonaws.com/dev/get-menu', {
-        restaurant_id: reservationData["restaurant_id"],
+        restaurant_id: reservationData['restaurant_id'],
       })
-
       .then((response) => {
         // Assuming the response data is an array of menu items
         setMenuItems(response.data.body.restaurant_food_menu);
@@ -24,9 +24,10 @@ function MenuReservationApp() {
       .catch((error) => {
         console.error('Error fetching menu items:', error);
       });
-  },[] ); // The empty dependency array ensures that this effect runs only once on mount
+  }, []);
 
-  const isEntireMenuOffer = menuItems.length > 0 && menuItems[0].menu_offer !== undefined;
+  const isEntireMenuOffer =
+    menuItems.length > 0 && menuItems[0].menu_offer !== undefined;
 
   const getNonSlashedPrice = (item) => {
     return {
@@ -38,53 +39,62 @@ function MenuReservationApp() {
   const handleQuantityChange = (itemId, newQuantity) => {
     // Ensure newQuantity is a valid number and greater than or equal to 0
     newQuantity = Number.isNaN(newQuantity) || newQuantity < 0 ? 0 : newQuantity;
-  
+
     setMenuItems((prevItems) => {
       const updatedItems = prevItems.map((item) =>
         item.id === itemId ? { ...item, quantity: newQuantity } : item
       );
-  
+
       return updatedItems;
     });
   };
-  
-  
+
+  const handleDeleteItem = (itemId) => {
+    setMenuItems((prevItems) => {
+      const updatedItems = prevItems.map((item) =>
+        item.id === itemId ? { ...item, quantity: 0 } : item
+      );
+      return updatedItems;
+    });
+  };
 
   const handleAddToCart = async () => {
     const selectedItems = menuItems.filter((item) => item.quantity > 0);
     console.log('Selected items:', selectedItems);
     // Implement your logic to submit the reservation here
 
-console.log(reservationData["reservation_id"] )
+    console.log(reservationData['reservation_id']);
     // Step 2: Prepare the updated data
     const updatedData = {
-      id:reservationData["reservation_id"] , // The reservation ID to update
-      food_reservation:selectedItems,
-       // This is hardcoded for now, adjust as needed
+      id: reservationData['reservation_id'], // The reservation ID to update
+      food_reservation: selectedItems,
+      // This is hardcoded for now, adjust as needed
       updated_by: userId,
-      updated_date: new Date().toISOString()
-  };
+      updated_date: new Date().toISOString(),
+    };
 
-  // Step 3: Send the updated data to the cloud function
-  try {
-    console.log(JSON.stringify(updatedData))
-      const response = await fetch('https://us-central1-serverless-402614.cloudfunctions.net/updateReservation', {
+    // Step 3: Send the updated data to the cloud function
+    try {
+      console.log(JSON.stringify(updatedData));
+      const response = await fetch(
+        'https://us-central1-serverless-402614.cloudfunctions.net/updateReservation',
+        {
           method: 'POST',
           headers: {
-              'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify(updatedData)
-      });
+          body: JSON.stringify(updatedData),
+        }
+      );
       const result = await response.json();
       if (response.ok) {
-          alert('Reservation updated successfully!');
-         
+        alert('Reservation updated successfully!');
       } else {
-          alert('Failed to update reservation: ' + (result.error || 'Unknown error'));
+        alert('Failed to update reservation: ' + (result.error || 'Unknown error'));
       }
-  } catch (error) {
+    } catch (error) {
       alert('Error updating reservation: ' + error.message);
-  }
+    }
 
     // Reset quantities after submitting
     setMenuItems((prevItems) =>
@@ -135,7 +145,9 @@ console.log(reservationData["reservation_id"] )
                       <p>Discount: {item.menu_offer}</p>
                       <p>
                         Availability:{' '}
-                        {item.menu_item_availability === 'available' ? 'Available' : 'Unavailable'}
+                        {item.menu_item_availability === 'available'
+                          ? 'Available'
+                          : 'Unavailable'}
                       </p>
                       {item.menu_item_availability === 'available' && (
                         <div className="text-center">
@@ -156,6 +168,17 @@ console.log(reservationData["reservation_id"] )
                           </Button>
                         </div>
                       )}
+                      {item.menu_item_availability === 'available' && (
+                        <div className="text-left">
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleDeleteItem(item.id)}
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </Grid>
@@ -164,7 +187,12 @@ console.log(reservationData["reservation_id"] )
         </div>
       ))}
       <div className="text-center mt-4">
-        <Button variant="contained" color="primary" size="large" onClick={handleAddToCart}>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleAddToCart}
+        >
           Submit Reservation
         </Button>
       </div>
@@ -173,4 +201,3 @@ console.log(reservationData["reservation_id"] )
 }
 
 export default MenuReservationApp;
-
