@@ -10,8 +10,8 @@ exports.handler = async function (req, res, usersDB) {
   const transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
-      user: "akoliyapiyush28@gmail.com",
-      pass: "okod jeof epnp ffgz",
+      user: "",
+      pass: "",
     },
   });
 
@@ -29,7 +29,7 @@ exports.handler = async function (req, res, usersDB) {
 
       // Compose and send the email
       const mailOptions = {
-        from: "akoliyapiyush28@gmail.com",
+        from: "",
         to: email,
         subject: emailData.subject,
         text: emailData.body,
@@ -44,7 +44,7 @@ exports.handler = async function (req, res, usersDB) {
 
     // Compose and send the email
     const mailOptions = {
-      from: "akoliyapiyush28@gmail.com",
+      from: "",
       to: email,
       subject: emailData.subject,
       text: emailData.body,
