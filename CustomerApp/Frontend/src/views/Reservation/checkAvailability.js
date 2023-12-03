@@ -131,7 +131,8 @@ function BookingInterface() {
       "food_reservation": foodReservation,
       "updated_by": null,
       "description": `Reservations for ${noOfTables}`,
-      "user_id": localStorage.getItem('user_id')
+      "user_id": localStorage.getItem('user_id'),
+      "restaurant_name": restaurant.restaurant_name
     };
 
     fetch(' https://z21l2a983l.execute-api.us-east-1.amazonaws.com/prod1/add-reservation', {
