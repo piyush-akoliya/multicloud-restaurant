@@ -28,16 +28,16 @@ const Router = () => {
           <Route path="/menu" element={<Menu />} />
           <Route path="/restaurantView" element={<RestaurantView />} />
           <Route path="/viewReservation" element={<ViewReservation />} />
-          <Route path="/AddMenuItemForm" element={<AddMenuItemForm />} />
+          <Route path="/Add-Menu" element={<AddMenuItemForm />} />
           <Route
-            path="/ReservationCancellation"
+            path="/Close-Restaurant"
             element={<ReservationCancellation />}
           />
           <Route
             path="/RestaurantAvailabilityForm"
             element={<RestaurantAvailabilityForm />}
           />
-          <Route path="/TableDetails" element={<TableDetails />} />
+          <Route path="/Table-Details" element={<TableDetails />} />
         </Route>
       </Routes>
     </>

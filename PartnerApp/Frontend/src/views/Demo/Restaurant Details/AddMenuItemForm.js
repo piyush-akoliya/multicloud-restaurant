@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./AddMenuItemForm.css"; // Import a CSS file for styling (create this file if it doesn't exist)
+import { useNavigate } from "react-router-dom";
 
 const AddMenuItemForm = () => {
   const [menuCategory, setMenuCategory] = useState("");
@@ -10,6 +11,7 @@ const AddMenuItemForm = () => {
   const [itemPrice, setItemPrice] = useState("");
   const [image, setImage] = useState(null);
   const restaurantId = localStorage.getItem("restaurant_id");
+  const navigate = useNavigate();
   const apiUrl =
     "https://oblbtb4rq7.execute-api.us-east-1.amazonaws.com/dev/addFoodMenuItem";
 
@@ -23,7 +25,7 @@ const AddMenuItemForm = () => {
 
       // Create a JSON object to send
       const data = {
-        restaurant_id: restaurantId, // Using a static restaurant ID
+        restaurant_id: "2", // Using a static restaurant ID
         food_menu_item: {
           menu_category: menuCategory,
           menu_ingrediants: menuIngredients,
@@ -52,6 +54,7 @@ const AddMenuItemForm = () => {
         .catch((error) => {
           console.error("Error adding MenuItem:", error);
         });
+      navigate("/Table-Details");
     };
 
     // Read the image file as a data URL
@@ -64,13 +67,15 @@ const AddMenuItemForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="form-container">
+    <form onSubmit={handleSubmit} className="form-container" id="menuitemform">
+      <h1>Add Menu Items</h1>
       <div className="form-row">
         <label>
           Menu Category:
           <input
             type="text"
             value={menuCategory}
+            className="menu-item"
             onChange={(e) => setMenuCategory(e.target.value)}
           />
         </label>
@@ -81,6 +86,7 @@ const AddMenuItemForm = () => {
           Ingredients:
           <textarea
             value={menuIngredients}
+            className="menu-item"
             onChange={(e) => setMenuIngredients(e.target.value)}
           />
         </label>
@@ -92,6 +98,7 @@ const AddMenuItemForm = () => {
           <input
             type="text"
             value={availability}
+            className="menu-item"
             onChange={(e) => setAvailability(e.target.value)}
           />
         </label>
@@ -103,6 +110,7 @@ const AddMenuItemForm = () => {
           <input
             type="text"
             value={itemName}
+            className="menu-item"
             onChange={(e) => setItemName(e.target.value)}
           />
         </label>
@@ -112,6 +120,7 @@ const AddMenuItemForm = () => {
           <input
             type="text"
             value={itemOffer}
+            className="menu-item"
             onChange={(e) => setItemOffer(e.target.value)}
           />
         </label>
@@ -123,6 +132,7 @@ const AddMenuItemForm = () => {
           <input
             type="text"
             value={itemPrice}
+            className="menu-item"
             onChange={(e) => setItemPrice(e.target.value)}
           />
         </label>
@@ -131,12 +141,19 @@ const AddMenuItemForm = () => {
       <div className="form-row">
         <label>
           Image:
-          <input type="file" accept="image/*" onChange={handleImageChange} />
+          <input
+            type="file"
+            accept="image/*"
+            className="menu-item"
+            onChange={handleImageChange}
+          />
         </label>
       </div>
 
       <div className="form-row">
-        <button type="submit">Add Menu Item</button>
+        <button type="submit" className="menu-item">
+          Add Menu Item
+        </button>
       </div>
     </form>
   );

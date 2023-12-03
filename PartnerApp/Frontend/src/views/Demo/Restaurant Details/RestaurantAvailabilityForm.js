@@ -8,11 +8,13 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const RestaurantAvailabilityForm = () => {
+  const navigate = useNavigate();
   const restaurantId = localStorage.getItem("restaurantId");
   const [restaurantDetails, setRestaurantDetails] = useState({
-    restaurant_id: restaurantId,
+    restaurant_id: "1",
     restaurant_operation_details: [
       { day: "Sunday", opening_time: "", closing_time: "" },
       { day: "Monday", opening_time: "", closing_time: "" },
@@ -25,32 +27,30 @@ const RestaurantAvailabilityForm = () => {
   });
 
   useEffect(() => {
-    console.log(
-      "Here it is ::" + localStorage.userData.getItem("restaurantId")
-    );
+    console.log("Here it is ::" + localStorage.getItem("restaurant_id"));
     // Fetch previously submitted values from the database
-    const fetchPreviousAvailabilities = async () => {
-      try {
-        const response = await axios.get(
-          "https://ks1pq2xfal.execute-api.us-east-1.amazonaws.com/dev/getRestaurantOperations"
-        );
+    // const fetchPreviousAvailabilities = async () => {
+    //   try {
+    //     const response = await axios.get(
+    //       "https://ks1pq2xfal.execute-api.us-east-1.amazonaws.com/dev/getRestaurantOperations"
+    //     );
 
-        if (response.status === 200) {
-          // Update state with fetched values
-          setRestaurantDetails({
-            ...restaurantDetails,
-            restaurant_operation_details:
-              response.data || restaurantDetails.restaurant_operation_details,
-          });
-        } else {
-          console.error("Failed to fetch availabilities");
-        }
-      } catch (error) {
-        console.error("Error fetching availabilities:", error);
-      }
-    };
+    //     if (response.status === 200) {
+    //       // Update state with fetched values
+    //       setRestaurantDetails({
+    //         ...restaurantDetails,
+    //         restaurant_operation_details:
+    //           response.data || restaurantDetails.restaurant_operation_details,
+    //       });
+    //     } else {
+    //       console.error("Failed to fetch availabilities");
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching availabilities:", error);
+    //   }
+    // };
 
-    fetchPreviousAvailabilities();
+    // fetchPreviousAvailabilities();
   }, []); // Empty dependency array to ensure useEffect runs only once on mount
 
   const handleTimeChange = (day, timeType, value) => {
@@ -83,6 +83,7 @@ const RestaurantAvailabilityForm = () => {
 
       if (response.status === 200) {
         alert("Availabilities posted successfully");
+        navigate("/Add-Menu");
       } else {
         console.error("Failed to post availabilities");
       }

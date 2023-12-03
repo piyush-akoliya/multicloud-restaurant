@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./ReservationCancellation.css"; // Import the CSS file
 
 const ReservationCancellation = () => {
   const [description, setDescription] = useState("");
@@ -59,29 +60,36 @@ const ReservationCancellation = () => {
   maxDate.setDate(today.getDate() + 5);
 
   return (
-    <div>
-      <label>
-        Description:
-        <input
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-      </label>
-      <br />
-      <label>
-        Select Date:
-        <input
-          type="date"
-          value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
-          min={today.toISOString().split("T")[0]}
-          max={maxDate.toISOString().split("T")[0]}
-        />
-      </label>
-      <br />
-      <button onClick={handleCancelReservation}>Cancel Reservation</button>
-    </div>
+    <>
+      <div className="reservation-cancellation-container">
+        <h1 id="reservationCancellation-header"> Restaurant Closure</h1>
+        <label className="input-label">
+          Description:
+          <input
+            className="input-text"
+            type="text"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </label>
+        <br />
+        <label className="input-label">
+          Select Date:
+          <input
+            className="input-date"
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            min={today.toISOString().split("T")[0]}
+            max={maxDate.toISOString().split("T")[0]}
+          />
+        </label>
+        <br />
+        <button className="cancel-button" onClick={handleCancelReservation}>
+          Cancel Reservation
+        </button>
+      </div>
+    </>
   );
 };
 
