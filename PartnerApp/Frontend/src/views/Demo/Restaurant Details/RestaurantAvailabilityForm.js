@@ -25,7 +25,9 @@ const RestaurantAvailabilityForm = () => {
   });
 
   useEffect(() => {
-    console.log("Here it is ::" + localStorage.getItem("restaurantId"));
+    console.log(
+      "Here it is ::" + localStorage.userData.getItem("restaurantId")
+    );
     // Fetch previously submitted values from the database
     const fetchPreviousAvailabilities = async () => {
       try {
