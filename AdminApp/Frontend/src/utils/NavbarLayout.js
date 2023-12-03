@@ -54,7 +54,7 @@ export default function NavbarLayout(props) {
             <ListItemButton
               sx={{ textAlign: "center" }}
               onClick={() => {
-                if (item == "Login") {
+                if (item == "Logout") {
                   localStorage.clear();
                   navigate("/Login");
                 } else {
@@ -118,7 +118,7 @@ export default function NavbarLayout(props) {
                   key={item}
                   // sx={{ color: "#fff" }}
                   onClick={() => {
-                    if (item == "Login") {
+                    if (item == "Logout") {
                       localStorage.clear();
                       navigate("/Login");
                     } else {
