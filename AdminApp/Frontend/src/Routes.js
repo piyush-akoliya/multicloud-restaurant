@@ -3,7 +3,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import NavbarLayout from "./utils/NavbarLayout";
 import Home from "./views/Home";
 import FoodItems from "./views/Food_Items/FoodItems";
-import Home from "./views/Home/index";
+
 import Login from "./views/Login/Login";
 
 import Reviews from "./views/Reviews";
