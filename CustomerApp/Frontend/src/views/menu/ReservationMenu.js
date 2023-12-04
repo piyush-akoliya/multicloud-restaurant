@@ -214,13 +214,14 @@ function MenuReservationApp() {
           </div>
         ))}
         <div className="text-center mt-4">
+        <span style={{ margin: '0 210px' }}></span>
           <Button
             variant="contained"
             color="primary"
             size="large"
             onClick={handleAddToCart}
           >
-            Submit Reservation
+            Click Here To Submit Reservation
           </Button>
         </div>
       </Container>
