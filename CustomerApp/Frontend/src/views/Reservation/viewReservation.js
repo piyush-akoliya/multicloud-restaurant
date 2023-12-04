@@ -22,17 +22,20 @@ const ReservationList = () => {
     const [restaurantEmails, setRestaurantEmails] = useState({});
 
     const fetchRestaurantEmail = async (restaurantId) => {
+        console.log(restaurantId);
         try {
-            const response = await axios.get('https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/getRestaurantEmail', {
-                restaurantId: restaurantId
+            const response = await axios.post('https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/getRestaurantEmail', {
+                restaurantId: restaurantId.toString()
             });
-
+            console.log(response);
             if (response.data && response.data.email) {
-                const { email } = response.data;
-                setRestaurantEmails(prevState => ({
-                    ...prevState,
-                    [restaurantId]: email
-                }));
+                const  email  = response.data.email;
+                // setRestaurantEmails(prevState => ({
+                //     ...prevState,
+                //     [restaurantId]: email
+                // }));
+                console.log(email);
+                setRestaurantEmails(email);
             }
         } catch (error) {
             console.error(`Error fetching email for restaurant ID ${restaurantId}:`, error);
@@ -109,8 +112,9 @@ const ReservationList = () => {
     const handleSubmitUpdate = async () => {
       // Step 1: Convert date, time and restaurant_id to a timestamp
      // Assuming your time slot format is "HH:MM - HH:MM"
-      const [hours, minutes] = selectedSlot.split('-')[0].trim().split(':');
+     const [hours, minutes] = selectedSlot.split('-')[0].trim().split(':');
     const timestamp = `${checkDate}T${hours}:${minutes}Z`;
+
 
   
       // Step 2: Prepare the updated data
@@ -138,19 +142,20 @@ const ReservationList = () => {
 
               const updatedReservationData = {
                 email: restaurantEmails,
-                reservation_id: updatedData.reservation_id, 
+                reservation_id: updatedData.id, 
                 no_of_tables: updatedData.no_of_tables,
                 reservation_timestamp: updatedData.reservation_timestamp,
               };
-      
-              await axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/updateReservation", {
-                body: JSON.stringify(updatedReservationData),
-              })
+              const requestBody = {
+                body: JSON.stringify(updatedReservationData)
+              };
+              console.log(requestBody);
+              await axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/updateReservation", requestBody)
               .then((res) => {
                 console.log('Response:', res.data);
               })
               .catch((err) => {
-                console.error('Error:', err.response ? err.response.data : err.message);
+                console.error('Error:', err.message);
               });
 
           } else {

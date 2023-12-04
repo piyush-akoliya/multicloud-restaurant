@@ -59,12 +59,13 @@ function BookingInterface() {
   const fetchRestaurantEmail = () => {
     const restaurantId = restaurant.restaurant_id;
     
-    axios.get('https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/getRestaurantEmail', {
+    axios.post('https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/getRestaurantEmail', {
       restaurantId: restaurantId
     })
     .then(response => {
-      const { email } = response.data;
-      console.log(response.data);
+      const  email  = response.data.email;
+      console.log(response);
+      console.log(email);
       setRestaurantEmail(email);
     })
     .catch(error => {
@@ -164,7 +165,7 @@ function BookingInterface() {
         no_of_tables: reservationData.no_of_tables,
         reservation_timestamp: reservationData.reservation_timestamp,
       };
-      
+      console.log(mailreservationData);
       axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/addreservation", {
         body: JSON.stringify(mailreservationData)
       })
