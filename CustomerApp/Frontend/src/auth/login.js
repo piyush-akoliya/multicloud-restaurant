@@ -45,13 +45,13 @@ function Login() {
    
 
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         const user = userCredential.user;
         console.log('User logged in with email and password:', user);
         showToast('Login successful', 'success');
 
       
-        makeAPIRequest(user.email);
+        await makeAPIRequest(user.email);
       })
       .catch((error) => {
         console.error('Email/password login error:', error.message);
@@ -62,12 +62,12 @@ function Login() {
   const handleGoogleLogin = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         const user = userCredential.user;
        // console.log('User logged in with Google:', user);
         showToast('Login with Google successful', 'success');
         console.log(user.email);
-        makeAPIRequest(user.email);
+        await makeAPIRequest(user.email);
 
       })
       .catch((error) => {
@@ -76,21 +76,21 @@ function Login() {
       });
   };
 
-  const makeAPIRequest = (email) => {
-    const apiUrl = 'https://dd0kk3kq5f.execute-api.us-east-1.amazonaws.com/prod/get-role';
-    const requestBody = { email };
-
+  const makeAPIRequest = async (email) => {
+    const apiUrl = 'https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/getuserid';
+    const requestBody = {
+      email: email,
+    };
+    console.log(requestBody);
     axios
       .post(apiUrl, requestBody)
       .then((response) => {
-        const data = response.data;
-        console.log('API Response:', data);
-      
-   
-            localStorage.setItem('userData', JSON.stringify(data));
-            localStorage.setItem('user_id', JSON.stringify(data.userId));
+        const data =response.data.body;
+        console.log('API Response:', JSON.parse(data));
+        navigate('/restaurantList');
+        
+        localStorage.setItem('user_id', JSON.parse(data).user_id);
             
-            navigate('/restaurantList');
       })
       .catch((error) => {
         console.error('API request error:', error);
