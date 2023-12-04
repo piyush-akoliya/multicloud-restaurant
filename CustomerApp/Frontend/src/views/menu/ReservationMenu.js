@@ -64,8 +64,8 @@ function MenuReservationApp() {
     });
   };
 
-  const handleEditItem = (itemId) => {
-    //Storing the selected item ID
+  const handleEditItem = (itemId) =>{
+    //Here we are storing the selected item ID
     setSelectedItemId(itemId);
   };
 
