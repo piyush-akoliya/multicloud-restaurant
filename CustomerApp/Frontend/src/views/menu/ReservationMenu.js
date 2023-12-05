@@ -18,6 +18,8 @@ function MenuReservationApp() {
   const location = useLocation();
   const [selectedItemId, setSelectedItemId] = useState(null);
   const reservationData = location.state?.reservationData || {};
+  const [restaurantEmail, setRestaurantEmail] = useState('');
+  const restaurant = location.state?.restaurant || JSON.parse(localStorage.getItem('checkAvailability_restaurant'));
 
   useEffect(() => {
     // Axios call on page load
@@ -64,6 +66,23 @@ function MenuReservationApp() {
     });
   };
 
+  const fetchRestaurantEmail = () => {
+    const restaurantId = restaurant.restaurant_id;
+    
+    axios.post('https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/getRestaurantEmail', {
+      restaurantId: restaurantId
+    })
+    .then(response => {
+      const  email  = response.data.email;
+      console.log(response);
+      console.log(email);
+      setRestaurantEmail(email);
+    })
+    .catch(error => {
+      console.error('Error fetching restaurant email:', error);
+    });
+  };
+
   const handleEditItem = (itemId) =>{
     //Here we are storing the selected item ID
     setSelectedItemId(itemId);
@@ -89,7 +108,52 @@ function MenuReservationApp() {
       updated_by: userId,
       updated_date: new Date().toISOString(),
     };
-
+ 
+   const restaurantId = restaurant.restaurant_id;
+    
+   axios.post('https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/getRestaurantEmail', {
+     restaurantId: restaurantId
+   })
+   .then(response => {
+     const  email  = response.data.email;
+     console.log(response);
+     console.log(email);
+     setRestaurantEmail(email);
+     const foodReservationArray = selectedItems.map(({ menu_item_name, quantity }) => ({
+      name: menu_item_name,
+      quantity,
+    }));
+    console.log('Food reservation array:', foodReservationArray);
+    const reservationData=JSON.parse(localStorage.getItem("mail_reservation_data"));
+    const emailData = {
+      email: email,
+      reservation_id: restaurant.restaurant_id,
+    no_of_tables: reservationData.no_of_tables,
+    reservation_timestamp:reservationData.reservation_timestamp,
+    food_reservation: foodReservationArray,
+    };
+    const foodReservationString = emailData.food_reservation
+  .map(item => `name: ${item.name}, quantity: ${item.quantity}`)
+  .join(', ');
+  emailData.food_reservation = foodReservationString;
+      console.log(JSON.stringify(emailData));
+      console.log(emailData);
+      axios.post(
+        'https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/addreservation',
+        JSON.stringify(emailData)
+      ).then((response)=>{
+        console.log(response);
+        if (response.status === 200) {
+          alert('Reservation added successfully!');
+        } else {
+          alert('Failed to add reservation: ' + (response.data.error || 'Unknown error'));
+        }
+      })
+   })
+   .catch(error => {
+     console.error('Error fetching restaurant email:', error);
+   });
+    
     try {
       console.log(JSON.stringify(updatedData));
       const response = await fetch(

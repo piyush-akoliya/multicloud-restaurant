@@ -51,7 +51,7 @@ function BookingInterface() {
   const [reservationSuccess, setReservationSuccess] = useState(false); 
   const [reservationIdAdded, setReservationIdAdded] = useState(null);
   const [restaurantEmail, setRestaurantEmail] = useState('');
-
+  const [withoutmenuData,setWithoutMenu] = useState([]);
   useEffect(() => {
     fetchRestaurantEmail();
   }, []);
@@ -166,15 +166,9 @@ function BookingInterface() {
         reservation_timestamp: reservationData.reservation_timestamp,
       };
       console.log(mailreservationData);
-      axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/addreservation", {
-        body: JSON.stringify(mailreservationData)
-      })
-        .then((res) => {
-          console.log('Response:', res.data);
-        })
-        .catch((err) => {
-          console.error('Error:', err.response ? err.response.data : err.message);
-        });
+      setWithoutMenu(mailreservationData);
+      localStorage.setItem('mail_reservation_data', JSON.stringify(mailreservationData));
+      
     })
     .catch(error => console.error('Error adding reservation:', error));
   };
@@ -201,6 +195,11 @@ function BookingInterface() {
       console.error('Error fetching data:', error);
     });
   };
+  const handleWithoutMenu = () =>{
+      axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/reservationwithoutmenu",withoutmenuData).then((res)=>{
+        console.log(res);
+      }).catch((err)=>console.log(err));
+  }
 return (
   <Box p={4}>
     <Typography variant="h4" gutterBottom>
@@ -327,7 +326,7 @@ Do you want to add Menu Items?
     <Button variant="contained" color="primary" onClick={navigateToMenu}>
       Click here to select Menu
     </Button>
-    <Button variant="outlined" color="secondary" onClick={() => setShowMenuModal(false)}>
+    <Button variant="outlined" color="secondary" onClick={() => {setShowMenuModal(false); handleWithoutMenu()}}>
       Cancel
     </Button>
   </DialogActions>
