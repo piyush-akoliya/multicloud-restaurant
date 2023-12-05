@@ -61,7 +61,7 @@ const ReservationCancellation = () => {
 
   return (
     <>
-      <div className="availability-container">
+      <div className="reservation-cancellation-container">
         <h1 className="reservation-cancellation-header"> Restaurant Closure</h1>
         <label className="container input-label">
           Description:

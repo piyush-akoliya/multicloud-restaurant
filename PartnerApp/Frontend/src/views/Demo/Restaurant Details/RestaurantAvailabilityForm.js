@@ -95,9 +95,8 @@ const RestaurantAvailabilityForm = () => {
 
   return (
     <div className="availability-container">
-      <div name="container">
-        <h2>Add/Edit Availability</h2>
-        {/* Display the added/editable availability */}
+      <div className="container">
+        <h2> Add/Edit Availability </h2>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -149,7 +148,7 @@ const RestaurantAvailabilityForm = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <button id="post-availability" onClick={postAvailabilities}>
+        <button className="cancel-button" onClick={postAvailabilities}>
           Post Availabilities
         </button>
       </div>
