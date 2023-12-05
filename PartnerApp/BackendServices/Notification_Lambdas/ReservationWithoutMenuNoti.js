@@ -8,7 +8,7 @@ export const handler = async (event, context) => {
   try {
     const email ="riyapatel3667@gmail.com"
     
-    const loginSuccessMessage = `New Reservation is booked without menu.`;
+    const loginSuccessMessage = 'New Reservation is booked without menu.';
       const snsLoginSuccessParams = {
         Message: loginSuccessMessage,
         Subject: "Reservation success",

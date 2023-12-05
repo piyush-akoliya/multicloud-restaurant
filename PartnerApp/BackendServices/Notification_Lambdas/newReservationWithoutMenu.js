@@ -10,7 +10,7 @@ const sns = new AWS.SNS();
 const snsTopicArn = 'arn:aws:sns:us-east-1:951684160274:newRestaurantSignup';
 
 const userTableName = "users";
-const lambdaFunctionName = "Reservation_With_Menu"; 
+const lambdaFunctionName = "ReservationwithoutMenu"; 
 
 export const handler = async (event, context) => {
   try {
@@ -21,16 +21,14 @@ export const handler = async (event, context) => {
       reservation_id,
       no_of_tables,
       reservation_timestamp,
-      food_reservation,
     } = body;
-    console.log(food_reservation);
 
     const userRef = admin.firestore().collection(userTableName);
     const querySnapshot = await userRef.where('email', '==', email).get();
     if (querySnapshot.size > 0) {
       console.log('User found:', email);
 
-      const reservationSuccessMessage = `New Reservation is booked.\nReservation ID: ${reservation_id}\nNumber of Tables: ${no_of_tables}\nReservation Time: ${reservation_timestamp} \n Food Items: ${food_reservation} `;
+      const reservationSuccessMessage = `New Reservation is booked without menu.\nReservation ID: ${reservation_id}\nNumber of Tables: ${no_of_tables}\nReservation Time: ${reservation_timestamp} \n `;
       
       console.log('Sending reservation success message:', reservationSuccessMessage);
 
@@ -54,10 +52,6 @@ export const handler = async (event, context) => {
           reservation_timestamp: {
             DataType: "String",
             StringValue: reservation_timestamp,
-          },
-          food_reservation : {
-            DataType: "String",
-            StringValue: food_reservation,
           }
         },
       };
@@ -67,7 +61,7 @@ export const handler = async (event, context) => {
 
       // Schedule EventBridge rule to trigger Lambda one hour before reservation timestamp
       const eventBridge = new AWS.EventBridge();
-      const reminderTime = new Date(reservation_timestamp).getTime() - 3600000; // One hour before
+      const reminderTime = new Date(reservation_timestamp).getTime() - 600000; // 10 mins before 
       const lambda = new AWS.Lambda();
       
       // Create the rule
