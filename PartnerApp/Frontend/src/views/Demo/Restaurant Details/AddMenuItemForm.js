@@ -152,7 +152,7 @@ const AddMenuItemForm = () => {
       </div>
 
       <div className="form-row">
-        <button type="submit" className="menu-item">
+        <button type="submit" id="menu-item-submit" className="menu-item">
           Add Menu Item
         </button>
       </div>

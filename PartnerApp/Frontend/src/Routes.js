@@ -23,11 +23,12 @@ const Router = () => {
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/grid" element={<MyCalendarComponent />} />
+
         <Route path="/" element={<NavbarLayout />}>
+          <Route path="/grid" element={<MyCalendarComponent />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/restaurantView" element={<RestaurantView />} />
-          <Route path="/viewReservation" element={<ViewReservation />} />
+          <Route path="/view-Reservation" element={<ViewReservation />} />
           <Route path="/Add-Menu" element={<AddMenuItemForm />} />
           <Route
             path="/Close-Restaurant"

@@ -1,29 +1,33 @@
 #menuitemform {
-  max-width: 400px; /* You can adjust the maximum width as needed */
+  max-width: 400px;
   margin: auto;
   padding-top: 2em;
 }
 
-.form-row {
+#menuitemform .form-row {
   margin-bottom: 15px;
 }
 
-/* label {
+#menuitemform label {
   display: block;
   margin-bottom: 5px;
-} */
+}
 
-/* input,
-textarea,
-button,
-select {
+#menuitemform input,
+#menuitemform textarea,
+#menuitemform button,
+#menuitemform select {
   width: 100%;
   padding: 8px;
   box-sizing: border-box;
   margin-bottom: 10px;
-} */
+}
 
-#menu-item-submit {
+#menuitemform input[type="file"] {
+  margin-top: 5px;
+}
+
+#menuitemform #menu-item-submit {
   background-color: #4caf50;
   color: white;
   padding: 10px 15px;
@@ -32,11 +36,6 @@ select {
   cursor: pointer;
 }
 
-#menu-item-submit:hover {
+#menuitemform #menu-item-submit:hover {
   background-color: #45a049;
 }
-
-/* Add additional styling for the file input if needed */
-/* input[type="file"] {
-  margin-top: 5px;
-} */

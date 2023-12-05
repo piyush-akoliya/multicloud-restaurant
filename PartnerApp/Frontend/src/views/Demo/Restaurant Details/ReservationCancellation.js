@@ -61,9 +61,9 @@ const ReservationCancellation = () => {
 
   return (
     <>
-      <div className="reservation-cancellation-container">
-        <h1 id="reservationCancellation-header"> Restaurant Closure</h1>
-        <label className="input-label">
+      <div className="availability-container">
+        <h1 className="reservation-cancellation-header"> Restaurant Closure</h1>
+        <label className="container input-label">
           Description:
           <input
             className="input-text"
@@ -73,7 +73,7 @@ const ReservationCancellation = () => {
           />
         </label>
         <br />
-        <label className="input-label">
+        <label className="container input-label">
           Select Date:
           <input
             className="input-date"
@@ -85,7 +85,10 @@ const ReservationCancellation = () => {
           />
         </label>
         <br />
-        <button className="cancel-button" onClick={handleCancelReservation}>
+        <button
+          className="container cancel-button"
+          onClick={handleCancelReservation}
+        >
           Cancel Reservation
         </button>
       </div>
