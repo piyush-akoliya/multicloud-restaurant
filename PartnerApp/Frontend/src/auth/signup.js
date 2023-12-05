@@ -62,6 +62,7 @@ function Signup() {
         console.log("User registered:", user);
         showToast("Registration successful", "success");
         setStep(2);
+        
       })
       .then(()=>{
         axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/newRestaurantsignup",{
@@ -86,7 +87,6 @@ function Signup() {
         setEmail(user.email);
         showToast("Google signup successful", "success");
         setStep(2);
-   
       })
       .catch((error) => {
         console.log(error);
@@ -105,6 +105,7 @@ function Signup() {
     try {
       imageUrl = await handleImageUpload(); // This will upload the image and return the URL
      console.log(imageUrl);
+     subscribeToSNS(email);
     } catch (error) {
       
     }
@@ -232,6 +233,19 @@ const restaurantId = generateReservationId();
       showToast("Error uploading image.", "error");
     }
   };
+
+  const subscribeToSNS = (email) => {
+    axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/subscribe", {
+      body: JSON.stringify({ email: email })
+    })
+      .then((response) => {
+        console.log("Subscription successful:", response.data);
+      })
+      .catch((error) => {
+        console.error("Subscription failed:", error.message);
+      });
+  };
+
   const backgroundStyle = {
     backgroundImage: `url('https://img.freepik.com/free-psd/chalk-italian-food-isolated_23-2150788278.jpg?w=996&t=st=1698215694~exp=1698216294~hmac=31539d2ddf91d9c22704fd02eb0c9790c7a24e572996145992c17ee604ef320f')`,
     backgroundSize: "cover",
