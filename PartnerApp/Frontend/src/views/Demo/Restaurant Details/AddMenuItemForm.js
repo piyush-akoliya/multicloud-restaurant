@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import "./AddMenuItemForm.css"; // Import a CSS file for styling (create this file if it doesn't exist)
 import { useNavigate } from "react-router-dom";
-
+import { toast, ToastContainer } from "react-toastify";
 const AddMenuItemForm = () => {
+  const showToast = (message, type) => {
+    toast(message, {
+      type,
+      position: "top-right",
+      autoClose: 2000,
+    });
+  };
   const [menuCategory, setMenuCategory] = useState("");
   const [menuIngredients, setMenuIngredients] = useState("");
   const [availability, setAvailability] = useState("");
@@ -49,13 +56,13 @@ const AddMenuItemForm = () => {
         .then((response) => response.json())
         .then((responseData) => {
           // Handle the response from the server as needed
-          alert("MenuItem added successfully:", responseData);
+          showToast("MenuItem added successfully", "success");
           // You can also perform additional actions here, such as updating the UI
+          navigate("/menu");
         })
         .catch((error) => {
-          console.error("Error adding MenuItem:", error);
+          showToast("Failed to add menu item", "error");
         });
-      navigate("/Table-Details");
     };
 
     // Read the image file as a data URL
@@ -150,7 +157,6 @@ const AddMenuItemForm = () => {
           />
         </label>
       </div>
-
       <div className="form-row">
         <button type="submit" id="menu-item-submit" className="menu-item">
           Add Menu Item

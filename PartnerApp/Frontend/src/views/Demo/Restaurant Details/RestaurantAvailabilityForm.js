@@ -9,8 +9,16 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { toast, ToastContainer } from "react-toastify";
+import Swal from "sweetalert2";
 const RestaurantAvailabilityForm = () => {
+  const showToast = (message, type) => {
+    toast(message, {
+      type,
+      position: "top-right",
+      autoClose: 2000,
+    });
+  };
   const navigate = useNavigate();
   const restaurantId = localStorage.getItem("restaurant_id").toString();
   const [restaurantDetails, setRestaurantDetails] = useState({
@@ -83,13 +91,13 @@ const RestaurantAvailabilityForm = () => {
       );
 
       if (response.status === 200) {
-        alert("Availabilities posted successfully");
-        navigate("/Add-Menu");
+        Swal.fire("Operation hours added successfully!");
+        navigate("/Table-Details");
       } else {
-        console.error("Failed to post availabilities");
+        showToast("Failed to add availability", "error");
       }
     } catch (error) {
-      console.error("Error posting availabilities:", error);
+      showToast("Failed to add availability", "error");
     }
   };
 

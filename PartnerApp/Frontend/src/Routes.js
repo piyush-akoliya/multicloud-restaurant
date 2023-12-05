@@ -35,7 +35,7 @@ const Router = () => {
             element={<ReservationCancellation />}
           />
           <Route
-            path="/RestaurantAvailabilityForm"
+            path="/Operation-hours"
             element={<RestaurantAvailabilityForm />}
           />
           <Route path="/Table-Details" element={<TableDetails />} />

@@ -1,14 +1,23 @@
 import React, { useState } from "react";
 import "./ReservationCancellation.css"; // Import the CSS file
-
+import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const ReservationCancellation = () => {
   const [description, setDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
-  const restaurantId = localStorage.getItem("restaurant_id").toString();
+  const restaurantId = localStorage.getItem("restaurant_id");
+  const navigate = useNavigate();
   const apiUrl =
     "https://us-central1-serverless-project-402603.cloudfunctions.net/updateReservationDescription";
 
   const handleCancelReservation = () => {
+    const showToast = (message, type) => {
+      toast(message, {
+        type,
+        position: "top-right",
+        autoClose: 2000,
+      });
+    };
     // Check if both description and date are provided
     if (description && selectedDate) {
       // Get the current time in the format HH:mm:ss
@@ -38,16 +47,14 @@ const ReservationCancellation = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          // Handle the response from the server as needed
-          alert("Reservation canceled successfully:", data);
-          // You can also perform additional actions here, such as updating the UI
+          showToast("Reservation cancelled  successfully", "success");
+          navigate("/menu");
         })
         .catch((error) => {
-          alert("Error canceling reservation:", error);
+          showToast("Failed to cancellation.", "error");
         });
     } else {
-      // Display an error message or take appropriate action if description or date is missing
-      alert("Description and date are required for cancellation.");
+      showToast("Description and date are required for cancellation.", "error");
     }
   };
 
@@ -85,6 +92,7 @@ const ReservationCancellation = () => {
           />
         </label>
         <br />
+        <ToastContainer />
         <button
           className="container cancel-button"
           onClick={handleCancelReservation}

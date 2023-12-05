@@ -1,13 +1,23 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./TableDetails.css";
-
+import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const TableDetails = () => {
   const [numTables, setNumTables] = useState(0);
   const [tableSize, setTableSize] = useState(2);
   const [tableDetails, setTableDetails] = useState([]);
   const restaurantId = localStorage.getItem("restaurant_id").toString();
+  const navigate = useNavigate();
   // const restaurantId = "1";
+  const showToast = (message, type) => {
+    toast(message, {
+      type,
+      position: "top-right",
+      autoClose: 2000,
+    });
+  };
+
   useEffect(() => {
     // Fetch table details from the API when the component mounts
     const fetchData = async () => {
@@ -83,9 +93,11 @@ const TableDetails = () => {
     );
 
     if (response.status === 200) {
-      alert("Data posted successfully");
+      showToast("Table Details added successfully", "success");
+
+      navigate("/Add-Menu");
     } else {
-      alert("Failed to post data successfully");
+      showToast("Failed to add table details", "error");
     }
   };
 
@@ -141,7 +153,7 @@ const TableDetails = () => {
           </ul>
         </div>
 
-        {/* Button to post data */}
+        <ToastContainer />
         <button className="post-data-button" onClick={handlePostData}>
           Post Data
         </button>

@@ -34,6 +34,7 @@ export default function NavbarLayout(props) {
     "Close-Restaurant",
     "view-Reservation",
     "grid",
+    "Operation-hours",
   ];
 
   const handleDrawerToggle = () => {
