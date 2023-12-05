@@ -4,7 +4,7 @@ import "./ReservationCancellation.css"; // Import the CSS file
 const ReservationCancellation = () => {
   const [description, setDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
-  const restaurantId = localStorage.getItem("restaurant_id");
+  const restaurantId = localStorage.getItem("restaurant_id").toString();
   const apiUrl =
     "https://us-central1-serverless-project-402603.cloudfunctions.net/updateReservationDescription";
 

@@ -10,7 +10,7 @@ const AddMenuItemForm = () => {
   const [itemOffer, setItemOffer] = useState("");
   const [itemPrice, setItemPrice] = useState("");
   const [image, setImage] = useState(null);
-  const restaurantId = localStorage.getItem("restaurant_id");
+  const restaurantId = localStorage.getItem("restaurant_id").toString();
   const navigate = useNavigate();
   const apiUrl =
     "https://oblbtb4rq7.execute-api.us-east-1.amazonaws.com/dev/addFoodMenuItem";

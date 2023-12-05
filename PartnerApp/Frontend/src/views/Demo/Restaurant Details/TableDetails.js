@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./TableDetails.css"; // Import the CSS file
+import "./TableDetails.css";
 
 const TableDetails = () => {
   const [numTables, setNumTables] = useState(0);
   const [tableSize, setTableSize] = useState(2);
   const [tableDetails, setTableDetails] = useState([]);
-  const restaurantId = localStorage.getItem("restaurant_id");
+  const restaurantId = localStorage.getItem("restaurant_id").toString();
   // const restaurantId = "1";
   useEffect(() => {
     // Fetch table details from the API when the component mounts

@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 const RestaurantAvailabilityForm = () => {
   const navigate = useNavigate();
-  const restaurantId = localStorage.getItem("restaurantId");
+  const restaurantId = localStorage.getItem("restaurant_id").toString();
   const [restaurantDetails, setRestaurantDetails] = useState({
     // restaurant_id: "1",
     restaurant_id: restaurantId,

@@ -8,12 +8,12 @@
   margin-bottom: 15px;
 }
 
-label {
+/* label {
   display: block;
   margin-bottom: 5px;
-}
+} */
 
-input,
+/* input,
 textarea,
 button,
 select {
@@ -21,7 +21,7 @@ select {
   padding: 8px;
   box-sizing: border-box;
   margin-bottom: 10px;
-}
+} */
 
 #menu-item-submit {
   background-color: #4caf50;
@@ -37,6 +37,6 @@ select {
 }
 
 /* Add additional styling for the file input if needed */
-input[type="file"] {
+/* input[type="file"] {
   margin-top: 5px;
-}
+} */
