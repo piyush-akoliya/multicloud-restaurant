@@ -15,13 +15,17 @@ const RestaurantList = () => {
       try {
         // Fetching data from the provided API endpoint
         const response = await axios.get(
-          "https://b3irstkdylemeqtu2ep24jvtd40jsnnr.lambda-url.us-east-1.on.aws/"
+          // "https://b3irstkdylemeqtu2ep24jvtd40jsnnr.lambda-url.us-east-1.on.aws/"
+          "https://hgwqqzlobd57p6bt3lwrzm4lni0rboec.lambda-url.us-east-1.on.aws"
         );
         // Parsing the received data
         // const data = JSON.parse(response.data.body.replace(/"(\s+)(\w+)(?=")/g, '"$2'));
         // console.log(data); // Logging the data to the console
         // Setting the restaurants data in the state
-        if (response.data) setRestaurantsData(response?.data);
+        if (response.data) {
+          setRestaurantsData(response?.data);
+          console.log(response?.data);
+        }
       } catch (error) {
         console.error("Error fetching data: ", error); // Logging an error if the data fetching fails
       }

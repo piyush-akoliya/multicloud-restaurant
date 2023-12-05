@@ -26,10 +26,13 @@ class App extends Component {
     this.state = {
       userInput: "",
       conversations: [],
-      currentCardIndex: 0,
-      totalCards: 0,
     };
   }
+
+  // Method to scroll to the bottom of the messages container
+  // scrollToBottom = () => {
+  //   this.messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // };
 
   sendMessageToLex = (message) => {
     const lexruntime = new AWS.LexRuntime();
@@ -39,7 +42,7 @@ class App extends Component {
       userId: "12313412",
       inputText: message || this.state.userInput,
       sessionAttributes: {
-        UserId: "1",
+        UserId: "1", // Include the user ID here
       },
     };
 
@@ -61,16 +64,13 @@ class App extends Component {
           timestamp: new Date(),
         },
       ];
-      this.setState({
-        conversations: newConversations,
-        userInput: "",
-        currentCardIndex: 0,
-        totalCards: data.responseCard
-          ? data.responseCard.genericAttachments.length
-          : 0,
-      });
+      this.setState({ conversations: newConversations, userInput: "" });
     });
   };
+
+  // componentDidUpdate() {
+  //   this.scrollToBottom();
+  // }
 
   handleCardButtonClick = (value) => {
     this.sendMessageToLex(value);
@@ -84,7 +84,7 @@ class App extends Component {
       borderRadius: "5px",
       display: "inline-block",
       backgroundColor: isBot ? "#e0f7fa" : "#c5e1a5",
-      whiteSpace: "pre-line",
+      whiteSpace: "pre-line", // This CSS property will make the newline characters effective
     };
 
     return (
@@ -92,7 +92,9 @@ class App extends Component {
         <div style={bubbleStyle}>
           <Typography variant="body1">{conversation.content}</Typography>
           {isBot && conversation.responseCard
-            ? this.renderResponseCards(conversation.responseCard)
+            ? this.renderResponseCard(
+                conversation.responseCard.genericAttachments[0]
+              )
             : null}
         </div>
         <Typography variant="caption" display="block" gutterBottom>
@@ -102,56 +104,12 @@ class App extends Component {
     );
   };
 
-  renderResponseCards = (responseCard) => {
-    const { genericAttachments } = responseCard;
-    const { currentCardIndex } = this.state;
-    const card = genericAttachments[currentCardIndex];
-
-    return (
-      <div>
-        {this.renderResponseCard(card)}
-        {genericAttachments.length > 1 && (
-          <Box display="flex" justifyContent="center" marginTop="10px">
-            <Button
-              onClick={this.previousCard}
-              disabled={currentCardIndex === 0}
-            >
-              Previous
-            </Button>
-            <Button
-              onClick={this.nextCard}
-              disabled={currentCardIndex === genericAttachments.length - 1}
-            >
-              Next
-            </Button>
-          </Box>
-        )}
-      </div>
-    );
-  };
-
   renderResponseCard = (card) => {
-    if (!card) {
-      return null; // Return null if the card object is not defined
-    }
-
-    const imageStyles = {
-      maxWidth: "100%", // Maximum width as a percentage of the container width
-      maxHeight: "200px", // Maximum height in pixels
-      height: "auto", // Maintain aspect ratio
-      margin: "10px 0", // Margin around the image
-      display: "block", // Display block to center the image in the CardContent
-      marginLeft: "auto", // Combined with marginRight 'auto' for centering
-      marginRight: "auto",
-    };
     return (
       <Card>
         <CardContent>
           <Typography variant="h6">{card.title}</Typography>
-          {card.imageUrl && (
-            <img src={card.imageUrl} alt={card.title} style={imageStyles} />
-          )}
-          {card.buttons?.map((button, index) => (
+          {card.buttons.map((button, index) => (
             <Button
               key={index}
               variant="outlined"
@@ -166,37 +124,10 @@ class App extends Component {
     );
   };
 
-  nextCard = () => {
-    this.setState((prevState) => {
-      const nextIndex = prevState.currentCardIndex + 1;
-      const totalCards = prevState.totalCards;
-
-      // Ensure we don't exceed the bounds of the array
-      if (nextIndex < totalCards) {
-        return { currentCardIndex: nextIndex };
-      } else {
-        return {}; // Do nothing if we're at the end of the array
-      }
-    });
-  };
-
-  previousCard = () => {
-    this.setState((prevState) => {
-      const prevIndex = prevState.currentCardIndex - 1;
-
-      // Ensure the index does not go below 0
-      if (prevIndex >= 0) {
-        return { currentCardIndex: prevIndex };
-      } else {
-        return {}; // Do nothing if we're at the start of the array
-      }
-    });
-  };
-
   render() {
     return (
       <Container maxWidth="md">
-        <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
+        <Paper elevation={3} style={{ padding: "20px" }}>
           <Typography variant="h4" gutterBottom>
             BookaBite Chat
           </Typography>
@@ -204,7 +135,7 @@ class App extends Component {
             display="flex"
             flexDirection="column"
             style={{
-              maxHeight: "600px",
+              maxHeight: "400px",
               overflowY: "auto",
               marginBottom: "20px",
             }}

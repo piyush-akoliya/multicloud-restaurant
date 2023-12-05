@@ -1,13 +1,14 @@
 import React from 'react'
 
 const FoodItems = () => {
-
+//Function created for The top 10 food items ordered across restaurants
     const headingStyle = {
         textAlign: 'center',
         color: 'blue',       
         fontSize: '24px',     
         fontWeight: 'bold',   
       };
+
 
   return (
     <div className="FoodItems">

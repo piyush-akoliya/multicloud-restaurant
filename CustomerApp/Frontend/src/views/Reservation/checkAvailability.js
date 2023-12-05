@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import { useLocation , Link} from 'react-router-dom';
+import { useLocation , Link, useNavigate} from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -17,7 +17,9 @@ import {
 } from '@mui/material';
 function BookingInterface() {
 
+  
   const today = new Date().toISOString().split('T')[0];
+  const navigate = useNavigate();
   const handleDateInputChange = (event) => {
     
     const newDate = event.target.value;
@@ -42,12 +44,14 @@ function BookingInterface() {
   const [noOfTables, setNoOfTables] = useState(1);
   const [foodReservation, setFoodReservation] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showMenuModal, setShowMenuModal] = useState(false);
   const location = useLocation();
   const restaurant = location.state?.restaurant || JSON.parse(localStorage.getItem('checkAvailability_restaurant'));
   const date = location.state?.date || localStorage.getItem('checkAvailability_date');
   const [reservationSuccess, setReservationSuccess] = useState(false); 
+  const [reservationIdAdded, setReservationIdAdded] = useState(null);
   const [restaurantEmail, setRestaurantEmail] = useState('');
-
+  const [withoutmenuData,setWithoutMenu] = useState([]);
   useEffect(() => {
     fetchRestaurantEmail();
   }, []);
@@ -55,12 +59,13 @@ function BookingInterface() {
   const fetchRestaurantEmail = () => {
     const restaurantId = restaurant.restaurant_id;
     
-    axios.get('https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/getRestaurantEmail', {
+    axios.post('https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/getRestaurantEmail', {
       restaurantId: restaurantId
     })
     .then(response => {
-      const { email } = response.data;
-      console.log(response.data);
+      const  email  = response.data.email;
+      console.log(response);
+      console.log(email);
       setRestaurantEmail(email);
     })
     .catch(error => {
@@ -119,6 +124,11 @@ function BookingInterface() {
   }
   const user_id= localStorage.getItem('user_id');
   const reservation_id = generateReservationId();
+  const navigateToMenu = () => {
+    const reservationData = {"reservation_id":reservationIdAdded, "restaurant_id":restaurant["restaurant_id"]};
+    navigate('/menureservation', { state: { reservationData } });
+
+  }
   const addReservation = () => {
     const reservationData = {
       "reservation_id": reservation_id,
@@ -147,22 +157,18 @@ function BookingInterface() {
       console.log('Reservation added:', data);
       setShowModal(false);
       setReservationSuccess(true);
+      setShowMenuModal(true);
+      setReservationIdAdded(reservation_id)
       const mailreservationData = {
         email: restaurantEmail,
         reservation_id: reservationData.reservation_id,
         no_of_tables: reservationData.no_of_tables,
         reservation_timestamp: reservationData.reservation_timestamp,
       };
+      console.log(mailreservationData);
+      setWithoutMenu(mailreservationData);
+      localStorage.setItem('mail_reservation_data', JSON.stringify(mailreservationData));
       
-      axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/addreservation", {
-        body: JSON.stringify(mailreservationData)
-      })
-        .then((res) => {
-          console.log('Response:', res.data);
-        })
-        .catch((err) => {
-          console.error('Error:', err.response ? err.response.data : err.message);
-        });
     })
     .catch(error => console.error('Error adding reservation:', error));
   };
@@ -189,6 +195,11 @@ function BookingInterface() {
       console.error('Error fetching data:', error);
     });
   };
+  const handleWithoutMenu = () =>{
+      axios.post("https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/reservationwithoutmenu",withoutmenuData).then((res)=>{
+        console.log(res);
+      }).catch((err)=>console.log(err));
+  }
 return (
   <Box p={4}>
     <Typography variant="h4" gutterBottom>
@@ -307,6 +318,19 @@ return (
   </DialogActions>
 </Dialog>
 
+<Dialog open={showMenuModal} onClose={() => setShowMenuModal(false)}>
+<DialogTitle>
+Do you want to add Menu Items?
+</DialogTitle>
+<DialogActions>
+    <Button variant="contained" color="primary" onClick={navigateToMenu}>
+      Click here to select Menu
+    </Button>
+    <Button variant="outlined" color="secondary" onClick={() => {setShowMenuModal(false); handleWithoutMenu()}}>
+      Cancel
+    </Button>
+  </DialogActions>
+</Dialog>
   </Box>
 );
 }
