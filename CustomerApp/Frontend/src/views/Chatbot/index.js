@@ -19,8 +19,8 @@ class App extends Component {
     this.messagesEndRef = React.createRef();
     AWS.config.update({
       region: "us-east-1",
-      accessKeyId: "",
-      secretAccessKey: "",
+      accessKeyId: "AKIAYMKNWDA6YEKOHLFZ",
+      secretAccessKey: "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",
     });
 
     this.state = {
