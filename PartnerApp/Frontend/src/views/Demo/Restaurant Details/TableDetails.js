@@ -3,6 +3,7 @@ import axios from "axios";
 import "./TableDetails.css";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 const TableDetails = () => {
   const [numTables, setNumTables] = useState(0);
   const [tableSize, setTableSize] = useState(2);
@@ -42,18 +43,31 @@ const TableDetails = () => {
 
   const handleTableDetailsSubmit = () => {
     if (![2, 4, 6, 8].includes(tableSize)) {
-      alert("Number of tables must be 2, 4, 6, or 8.");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Number of tables must be 2, 4, 6, or 8.",
+      });
       return;
     }
 
     if (numTables === 0) {
-      alert("No of tables cannot be zero");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "No of tables cannot be zero",
+      });
       return;
     }
 
     // Check if an entry with the same table size already exists
     if (tableDetails.some((entry) => entry.tableSize === tableSize)) {
-      alert("Table with the same size already exists.");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Table with the same size already exists.",
+      });
+      alert();
       return;
     }
 
@@ -93,8 +107,7 @@ const TableDetails = () => {
     );
 
     if (response.status === 200) {
-      showToast("Table Details added successfully", "success");
-
+      Swal.fire("Table Details added successfully!");
       navigate("/Add-Menu");
     } else {
       showToast("Failed to add table details", "error");

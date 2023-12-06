@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./ReservationCancellation.css"; // Import the CSS file
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 const ReservationCancellation = () => {
   const [description, setDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
@@ -47,7 +48,7 @@ const ReservationCancellation = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          showToast("Reservation cancelled  successfully", "success");
+          Swal.fire("Reservation cancelled  successfully");
           navigate("/menu");
         })
         .catch((error) => {

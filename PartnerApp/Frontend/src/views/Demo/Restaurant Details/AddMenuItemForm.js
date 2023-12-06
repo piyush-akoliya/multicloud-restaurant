@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./AddMenuItemForm.css"; // Import a CSS file for styling (create this file if it doesn't exist)
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import Swal from "sweetalert2";
 const AddMenuItemForm = () => {
   const showToast = (message, type) => {
     toast(message, {
@@ -55,9 +56,7 @@ const AddMenuItemForm = () => {
       })
         .then((response) => response.json())
         .then((responseData) => {
-          // Handle the response from the server as needed
-          showToast("MenuItem added successfully", "success");
-          // You can also perform additional actions here, such as updating the UI
+          Swal.fire("Menu item added successfully!");
           navigate("/menu");
         })
         .catch((error) => {
