@@ -7,3 +7,7 @@
 - [Piyush Akoliya](py308472@dal.ca) (_B00920744_)
 - [Ramandeep Kaur](rm661081@dal.ca) (_B00943241_)
 - [Riyaben Pareshkumar Patel](ry470536@dal.ca) (_B00926204_)
+
+# multicloud-restaurant
+
+A multi-cloud serverless restaurant management application leveraging the power of AWS and GCP services.
