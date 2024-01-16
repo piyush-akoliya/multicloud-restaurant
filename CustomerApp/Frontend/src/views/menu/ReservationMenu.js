@@ -1,85 +1,296 @@
-import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import {
+  Container,
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  Button,
+  ThemeProvider,
+  createTheme,
+} from '@mui/material';
+import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 function MenuReservationApp() {
-  const [menuItems, setMenuItems] = useState([
-    { id: 1, category: 'Appetizers', name: 'Salad', price: 6, quantity: 0, ingredients: 'Lettuce, Tomatoes, Cucumbers, Dressing', discount: 10 },
-    { id: 2, category: 'Appetizers', name: 'Mozzarella Sticks', price: 8, quantity: 0, ingredients: 'Mozzarella Cheese, Breadcrumbs, Marinara Sauce', discount: 15 },
-    { id: 3, category: 'Appetizers', name: 'Bruschetta', price: 7, quantity: 0, ingredients: 'Chopped Tomatoes, Basil, Garlic sauce, Olive Oil', discount: 5 },
-    { id: 4, category: 'Main Course', name: 'Burger', price: 10, quantity: 0, ingredients: 'Beef Patty, Lettuce, Tomato, Cheese, Bun', discount: 20 },
-    { id: 5, category: 'Main Course', name: 'Pizza', price: 12, quantity: 0, ingredients: 'Tomato Sauce, Cheese, Pepperoni, Dough', discount: 25 },
-    { id: 6, category: 'Main Course', name: 'Pasta', price: 8, quantity: 0, ingredients: 'Pasta, Marinara Sauce, Parmesan Cheese', discount: 10 },
-    { id: 7, category: 'Desserts', name: 'Cheesecake', price: 5, quantity: 0, ingredients: 'Cream Cheese, Sugar', discount: 15 },
-    { id: 8, category: 'Desserts', name: 'Chocolate Cake', price: 6, quantity: 0, ingredients: 'Chocolate, Flour, Sugar, Eggs', discount: 30 },
-    { id: 9, category: 'Desserts', name: 'Ice Cream', price: 4, quantity: 0, ingredients: 'Milk, Sugar, Cream', discount: 5 },
-  ]);
+  const userId = localStorage.getItem('user_id');
+  const [menuItems, setMenuItems] = useState([]);
+  const location = useLocation();
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const reservationData = location.state?.reservationData || {};
+  const [restaurantEmail, setRestaurantEmail] = useState('');
+  const restaurant = location.state?.restaurant || JSON.parse(localStorage.getItem('checkAvailability_restaurant'));
 
-  const handleQuantityChange = (itemId, quantity) => {
+  useEffect(() => {
+    // Axios call on page load
+    axios
+      .post('https://prb29cpvt2.execute-api.us-east-1.amazonaws.com/dev/get-menu', {
+        restaurant_id: reservationData['restaurant_id'],
+      })
+      .then((response) => {
+        // Assuming the response data is an array of menu items
+        setMenuItems(response.data.body.restaurant_food_menu);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching menu items:', error);
+      });
+  }, []);
+
+  // Basic theme setup using MUI v5
+  const theme = createTheme({
+    palette: {
+      mode: 'light', // Set 'dark' if you want a dark theme
+    },
+  });
+
+  const isEntireMenuOffer =
+    menuItems.length > 0 && menuItems[0].menu_offer !== undefined;
+
+  const getNonSlashedPrice = (item) => {
+    return {
+      regularPrice: item.menu_price,
+      discountedPrice: Math.round((item.menu_price / 1.1) * 100) / 100,
+    };
+  };
+
+  const handleQuantityChange = (itemId, newQuantity) => {
+    newQuantity = Number.isNaN(newQuantity) || newQuantity < 0 ? 0 : newQuantity;
+
+    setMenuItems((prevItems) => {
+      const updatedItems = prevItems.map((item) =>
+        item.id === itemId ? { ...item, quantity: newQuantity } : item
+      );
+
+      return updatedItems;
+    });
+  };
+
+  const fetchRestaurantEmail = () => {
+    const restaurantId = restaurant.restaurant_id;
+    
+    axios.post('https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/getRestaurantEmail', {
+      restaurantId: restaurantId
+    })
+    .then(response => {
+      const  email  = response.data.email;
+      console.log(response);
+      console.log(email);
+      setRestaurantEmail(email);
+    })
+    .catch(error => {
+      console.error('Error fetching restaurant email:', error);
+    });
+  };
+
+  const handleEditItem = (itemId) =>{
+    //Here we are storing the selected item ID
+    setSelectedItemId(itemId);
+  };
+
+  const handleDeleteItem = (itemId) => {
+    setMenuItems((prevItems) => {
+      const updatedItems = prevItems.map((item) =>
+        item.id === itemId ? { ...item, quantity: 0 } : item
+      );
+      return updatedItems;
+    });
+  };
+
+  const handleAddToCart = async () => {
+    const selectedItems = menuItems.filter((item) => item.quantity > 0);
+    console.log('Selected items:', selectedItems);
+
+    console.log(reservationData['reservation_id']);
+    const updatedData = {
+      id: reservationData['reservation_id'],
+      food_reservation: selectedItems,
+      updated_by: userId,
+      updated_date: new Date().toISOString(),
+    };
+ 
+   const restaurantId = restaurant.restaurant_id;
+    
+   axios.post('https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/getRestaurantEmail', {
+     restaurantId: restaurantId
+   })
+   .then(response => {
+     const  email  = response.data.email;
+     console.log(response);
+     console.log(email);
+     setRestaurantEmail(email);
+     const foodReservationArray = selectedItems.map(({ menu_item_name, quantity }) => ({
+      name: menu_item_name,
+      quantity,
+    }));
+    console.log('Food reservation array:', foodReservationArray);
+    const reservationData=JSON.parse(localStorage.getItem("mail_reservation_data"));
+    const emailData = {
+      email: email,
+      reservation_id: restaurant.restaurant_id,
+    no_of_tables: reservationData.no_of_tables,
+    reservation_timestamp:reservationData.reservation_timestamp,
+    food_reservation: foodReservationArray,
+    };
+    const foodReservationString = emailData.food_reservation
+  .map(item => `name: ${item.name}, quantity: ${item.quantity}`)
+  .join(', ');
+  emailData.food_reservation = foodReservationString;
+      console.log(JSON.stringify(emailData));
+      console.log(emailData);
+      axios.post(
+        'https://xam0fmzd13.execute-api.us-east-1.amazonaws.com/prod/addreservation',
+        JSON.stringify(emailData)
+      ).then((response)=>{
+        console.log(response);
+        if (response.status === 200) {
+          alert('Reservation added successfully!');
+        } else {
+          alert('Failed to add reservation: ' + (response.data.error || 'Unknown error'));
+        }
+      })
+   })
+   .catch(error => {
+     console.error('Error fetching restaurant email:', error);
+   });
+    
+    try {
+      console.log(JSON.stringify(updatedData));
+      const response = await fetch(
+        'https://us-central1-serverless-402614.cloudfunctions.net/updateReservation',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedData),
+        }
+      );
+      const result = await response.json();
+      if (response.ok) {
+        alert('Reservation updated successfully!');
+      } else {
+        alert('Failed to update reservation: ' + (result.error || 'Unknown error'));
+      }
+    } catch (error) {
+      alert('Error updating reservation: ' + error.message);
+    }
+
     setMenuItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === itemId ? { ...item, quantity } : item
-      )
+      prevItems.map((item) => ({ ...item, quantity: 0 }))
     );
   };
 
-  const handleAddToCart = () => {
-    const selectedItems = menuItems.filter((item) => item.quantity > 0);
-    console.log('Selected items:', selectedItems);
-    // Implement your logic to submit the reservation here
-  };
-
-  // Group menu items by category
   const categories = [...new Set(menuItems.map((item) => item.category))];
 
   return (
-    <Container className="mt-5">
-      <h1 className="text-center">Restaurant Menu</h1>
-      {categories.map((category) => (
-        <div key={category}>
-          <h2 className="text-center">{category}</h2>
-          <Row>
-            {menuItems
-              .filter((item) => item.category === category)
-              .map((item) => (
-                <Col key={item.id} md={4} className="mb-4">
-                  <Card>
-                    <Card.Body>
-                      <h5 className="card-title">{item.name}</h5>
-                      <p className="card-text">${item.price}</p>
-                      <p className="card-text">Ingredients: {item.ingredients}</p>
-                      <p className="card-text">Discount: {item.discount}% off</p>
-                      <div className="text-center">
-                        <Button
-                          variant="danger"
-                          className="mr-2"
-                          onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                        >
-                          -
-                        </Button>
-                        <span>{item.quantity}</span>
-                        <Button
-                          variant="success"
-                          className="ml-2"
-                          onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                        >
-                          +
-                        </Button>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-          </Row>
+    <ThemeProvider theme={theme}>
+      <Container className="mt-5">
+        <h1 className="text-center">Restaurant Menu</h1>
+        {isEntireMenuOffer && (
+          <div className="text-center">
+            <h3>Special Offer: 20% off on the entire menu!</h3>
+          </div>
+        )}
+        {categories.map((category) => (
+          <div key={category}>
+            <h2 className="text-center">{category}</h2>
+            <Grid container spacing={3}>
+              {menuItems
+                .filter((item) => item.category === category)
+                .map((item) => (
+                  <Grid key={item.id} item xs={12} md={4}>
+                    <Card>
+                      <CardMedia
+                        component="img"
+                        alt={item.menu_category}
+                        height="140"
+                        image={item.menu_image}
+                      />
+                      <CardContent>
+                        <h5>{item.menu_category}</h5>
+                        {isEntireMenuOffer && (
+                          <>
+                            <p style={{ textDecoration: 'line-through', color: 'gray' }}>
+                              ${getNonSlashedPrice(item).regularPrice}
+                            </p>
+                            <p style={{ fontWeight: 'bold', color: 'red' }}>
+                              ${getNonSlashedPrice(item).discountedPrice}
+                            </p>
+                          </>
+                        )}
+                        {!isEntireMenuOffer && <p>${item.menu_price}</p>}
+                        <p>Ingredients: {item.menu_ingrediants}</p>
+                        <p>Discount: {item.menu_offer}</p>
+                        <p>
+                          Availability:{' '}
+                          {item.menu_item_availability === 'available'
+                            ? 'Available'
+                            : 'Unavailable'}
+                        </p>
+                        {item.menu_item_availability === 'available' && (
+                          <div className="text-center">
+                            <span style={{ margin: '0 50px' }}></span>
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                            >
+                              -
+                            </Button>
+                            <span style={{ margin: '0 10px' }}>{item.quantity}</span>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                            >
+                              +
+                            </Button>
+                          </div>
+                        )}
+                        {item.menu_item_availability === 'available' && (
+                          <div>
+                            <span style={{ margin: '0 0px' }}></span>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={() => handleDeleteItem(item.id)}
+                            >
+                              Delete
+                            </Button>
+                            <span style={{ margin: '0 90px' }}></span>
+                          
+                            <Button
+                              variant="contained"
+                              color="primary"
+                        
+                              onClick={() => handleEditItem(item.id)}
+                            >
+                              Edit
+                            </Button>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+            </Grid>
+          </div>
+        ))}
+        <div className="text-center mt-4">
+        <span style={{ margin: '0 210px' }}></span>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            onClick={handleAddToCart}
+          >
+            Click Here To Submit Reservation
+          </Button>
         </div>
-      ))}
-      <div className="text-center mt-4">
-        <Button variant="primary" size="lg" onClick={handleAddToCart}>
-          Submit Reservation
-        </Button>
-      </div>
-    </Container>
+      </Container>
+    </ThemeProvider>
   );
-}
+};
 
 export default MenuReservationApp;

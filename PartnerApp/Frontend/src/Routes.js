@@ -23,21 +23,22 @@ const Router = () => {
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/grid" element={<MyCalendarComponent />} />
+
         <Route path="/" element={<NavbarLayout />}>
+          <Route path="/grid" element={<MyCalendarComponent />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/restaurantView" element={<RestaurantView />} />
-          <Route path="/viewReservation" element={<ViewReservation />} />
-          <Route path="/AddMenuItemForm" element={<AddMenuItemForm />} />
+          <Route path="/view-Reservation" element={<ViewReservation />} />
+          <Route path="/Add-Menu" element={<AddMenuItemForm />} />
           <Route
-            path="/ReservationCancellation"
+            path="/Close-Restaurant"
             element={<ReservationCancellation />}
           />
           <Route
-            path="/RestaurantAvailabilityForm"
+            path="/Operation-hours"
             element={<RestaurantAvailabilityForm />}
           />
-          <Route path="/TableDetails" element={<TableDetails />} />
+          <Route path="/Table-Details" element={<TableDetails />} />
         </Route>
       </Routes>
     </>

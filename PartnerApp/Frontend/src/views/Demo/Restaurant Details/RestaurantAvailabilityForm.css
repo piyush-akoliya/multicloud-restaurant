@@ -2,51 +2,27 @@
   font-family: "Arial", sans-serif;
   background-color: #f4f4f4;
   margin: 0;
-  padding-top: 15em;
+  padding-top: 2em;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-}
-
-#post-availability {
-  margin-top: 3em;
-  margin-bottom: 3em;
+  min-height: 100vh;
 }
 
 .container {
-  max-width: 600px;
+  max-width: 800px;
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
-h2 {
+.container h2 {
   color: #333;
-  text-align: center;
 }
 
-form {
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-label {
-  display: block;
-  margin-bottom: 8px;
-  color: #555;
-}
-
-input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
+.container button.cancel-button {
   background-color: #007bff;
   color: #fff;
   padding: 10px 15px;
@@ -54,25 +30,36 @@ button {
   border-radius: 4px;
   cursor: pointer;
   display: block;
-  margin: 0 auto;
+  margin: 20px auto;
 }
 
-button:hover {
+.container button.cancel-button:hover {
   background-color: #0056b3;
 }
 
-h3 {
-  color: #333;
-  text-align: center;
+/* Style for the table */
+.container Table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
+.container Table th,
+.container Table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
 }
 
-li {
-  margin-bottom: 8px;
-  color: #555;
-  text-align: center;
+.container Table th {
+  background-color: #f2f2f2;
+}
+
+/* Style for the time inputs */
+.container input[type="time"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }

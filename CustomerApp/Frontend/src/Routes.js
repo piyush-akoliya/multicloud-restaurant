@@ -7,6 +7,7 @@ import NavbarLayout from "./utils/NavbarLayout";
 import RestaurantDetails from "./list-restaurant/RestaurantDetails";
 import RestaurantList from "./list-restaurant/RestaurantList";
 import ViewReservation from "./views/Reservation/viewReservation";
+import MenuReservationApp from "./views/menu/ReservationMenu";
 
 import Slots from "./views/Reservation/checkAvailability";
 import "./list-restaurant/styles.css";
@@ -24,6 +25,7 @@ const Router = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<NavbarLayout />}>
           <Route path="/chatbot" element={<Chatbot />} />
+          <Route path="/MenuReservation" element={<MenuReservationApp />} />
           <Route path="/restaurantList" element={<RestaurantList />} />
           <Route path="/restaurant/:id" element={<RestaurantDetails />} />
           {/* <Route path="/checkAvailability" Component={Slots} />

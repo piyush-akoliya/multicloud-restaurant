@@ -8,10 +8,21 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import Swal from "sweetalert2";
 const RestaurantAvailabilityForm = () => {
-  const restaurantId = localStorage.getItem("restaurantId");
+  const showToast = (message, type) => {
+    toast(message, {
+      type,
+      position: "top-right",
+      autoClose: 2000,
+    });
+  };
+  const navigate = useNavigate();
+  const restaurantId = localStorage.getItem("restaurant_id").toString();
   const [restaurantDetails, setRestaurantDetails] = useState({
+    // restaurant_id: "1",
     restaurant_id: restaurantId,
     restaurant_operation_details: [
       { day: "Sunday", opening_time: "", closing_time: "" },
@@ -25,32 +36,30 @@ const RestaurantAvailabilityForm = () => {
   });
 
   useEffect(() => {
-    console.log(
-      "Here it is ::" + localStorage.userData.getItem("restaurantId")
-    );
+    console.log("Here it is ::" + localStorage.getItem("restaurant_id"));
     // Fetch previously submitted values from the database
-    const fetchPreviousAvailabilities = async () => {
-      try {
-        const response = await axios.get(
-          "https://ks1pq2xfal.execute-api.us-east-1.amazonaws.com/dev/getRestaurantOperations"
-        );
+    // const fetchPreviousAvailabilities = async () => {
+    //   try {
+    //     const response = await axios.get(
+    //       "https://ks1pq2xfal.execute-api.us-east-1.amazonaws.com/dev/getRestaurantOperations"
+    //     );
 
-        if (response.status === 200) {
-          // Update state with fetched values
-          setRestaurantDetails({
-            ...restaurantDetails,
-            restaurant_operation_details:
-              response.data || restaurantDetails.restaurant_operation_details,
-          });
-        } else {
-          console.error("Failed to fetch availabilities");
-        }
-      } catch (error) {
-        console.error("Error fetching availabilities:", error);
-      }
-    };
+    //     if (response.status === 200) {
+    //       // Update state with fetched values
+    //       setRestaurantDetails({
+    //         ...restaurantDetails,
+    //         restaurant_operation_details:
+    //           response.data || restaurantDetails.restaurant_operation_details,
+    //       });
+    //     } else {
+    //       console.error("Failed to fetch availabilities");
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching availabilities:", error);
+    //   }
+    // };
 
-    fetchPreviousAvailabilities();
+    // fetchPreviousAvailabilities();
   }, []); // Empty dependency array to ensure useEffect runs only once on mount
 
   const handleTimeChange = (day, timeType, value) => {
@@ -82,20 +91,20 @@ const RestaurantAvailabilityForm = () => {
       );
 
       if (response.status === 200) {
-        alert("Availabilities posted successfully");
+        Swal.fire("Operation hours added successfully!");
+        navigate("/Table-Details");
       } else {
-        console.error("Failed to post availabilities");
+        showToast("Failed to add availability", "error");
       }
     } catch (error) {
-      console.error("Error posting availabilities:", error);
+      showToast("Failed to add availability", "error");
     }
   };
 
   return (
     <div className="availability-container">
-      <div name="container">
-        <h2>Add/Edit Availability</h2>
-        {/* Display the added/editable availability */}
+      <div className="container">
+        <h2> Add/Edit Availability </h2>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -147,7 +156,7 @@ const RestaurantAvailabilityForm = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <button id="post-availability" onClick={postAvailabilities}>
+        <button className="cancel-button" onClick={postAvailabilities}>
           Post Availabilities
         </button>
       </div>
