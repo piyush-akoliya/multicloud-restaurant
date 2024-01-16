@@ -8,3 +8,8 @@
 - [Ramandeep Kaur](rm661081@dal.ca) (_B00943241_)
 - [Riyaben Pareshkumar Patel](ry470536@dal.ca) (_B00926204_)
 - [Mohammad Amin Rashid Shaikh](mh330119@dal.ca) (_B00932058_)
+
+# multicloud-restaurant
+
+A multi-cloud serverless restaurant management application leveraging the power of AWS and GCP services.
+
